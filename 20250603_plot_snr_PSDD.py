@@ -99,7 +99,7 @@ def plot_snr_violin_panels_3x3(SNR_dict_table, R_list, row_labels=None, col_labe
     fig.subplots_adjust(left=0.10, right=0.98, bottom=0.08, top=0.92)
 
 if __name__ == "__main__":
-    fig_dir = "/exosims_samples/figures"
+    fig_dir = "/fast/jruffio/data/exosims/exosims_samples/figures"
 
     R_list = [20,50,140,400,1000,3000,10000]
     # R_list = [100,1000]

@@ -28,7 +28,7 @@ import json
 import ternary
 
 if __name__ == "__main__":
-    fig_dir = "/exosims_samples/figures"
+    fig_dir = "/fast/jruffio/data/exosims/exosims_samples/figures"
 
     # R_list = [20,50,140,400,1000,3000,10000]
     R_list = [1000]
@@ -151,8 +151,6 @@ if __name__ == "__main__":
                 _C_star_spec_list = C_extra["C_star_spec"]
                 _C_rn_spec_list = C_extra["C_rn_spec"] # List of read noise spectra
                 _C_cc_spec_list = C_extra["C_cc_spec"] # List of clock-induced charge spectra
-                print(_C_cc_spec_list)
-                exit()
                 Npix = C_extra["Npix_per_bin"]
                 k_SZ = C_extra["k_SZ"]
                 k_det = C_extra["k_det"]

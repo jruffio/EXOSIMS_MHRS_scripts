@@ -1,168 +1,12 @@
-import os, time, shutil, datetime
-import numpy as np
-import yaml
-from astropy.io import fits
-import astropy.units as u
-import EXOSIMS.MissionSim as ems
-from copy import deepcopy
-import matplotlib.pyplot as plt
-from matplotlib.lines import Line2D
-import numpy as np
-from scipy.interpolate import CubicSpline
-from scipy.optimize import minimize
-from scipy.interpolate import interp1d
 from etc_utils import *
-
 from EXOSIMS.util.deltaMag import deltaMag
 
-from synphot import Observation
-from synphot import SourceSpectrum
-from astropy.modeling.models import Tabular1D
-
-from EXOSIMS.OpticalSystem.MHRS import write_snr_results_to_file, read_snr_results_from_file
-
+from EXOSIMS.OpticalSystem.MHRS import read_snr_results_from_file
+from histogram_violin import plot_snr_violin_panels
 
 import matplotlib.pyplot as plt
 import numpy as np
 import json
-import ternary
-
-def plot_snr_violin_panels(SNR_dict_list, R_list):
-    """
-    Plot violin plots of SNR values for all stars across different spectral resolutions.
-    Each panel may show the distribution of one or more SNR metrics, as specified in snr_keys.
-
-    Parameters
-    ----------
-    SNR_dict_list : list of dict
-        List of SNR result dictionaries, one per spectral resolution.
-
-    R_list : list of int or float
-        Spectral resolution values corresponding to each entry in SNR_dict_list.
-    """
-    snr_keys = [
-        "SNR_all_avg_per_bin",
-        "SNR_all_corr",
-        "SNR_O2_corr",
-        "SNR_H2O_corr"
-        # ["SNR_O2_corr", "SNR_O2_uncorr_small_scale"],
-        # ["SNR_H2O_corr","SNR_H2O_uncorr_small_scale"]
-    ]
-    titles = [
-        "Average S/N per bin",
-        '"Broadband" S/N (all molecules)',
-        "S/N of O2 only",
-        "S/N of H2O only"
-    ]
-
-    logR = np.log10(R_list)
-
-    fig, axes = plt.subplots(1, len(snr_keys), figsize=(6 * len(snr_keys), 5))  # Adapt width
-    if len(snr_keys) == 1:
-        axes = [axes]  # Ensure axes is always iterable
-
-    # List of colors used in the plots
-    color_list = ["#ff9900","#006699", "#6600ff","purple","grey"]
-    for idx, (ax, snr_key_group, title) in enumerate(zip(axes, snr_keys, titles)):
-        # Ensure snr_key_group is always a list
-        if isinstance(snr_key_group, str):
-            snr_key_group = [snr_key_group]
-        for k,(snr_key,color) in enumerate(zip(snr_key_group,color_list)):
-            # Collect SNR values for each resolution, removing NaNs
-            data = []
-            logR4data = []
-            for snr_dict,_logR in zip(SNR_dict_list,logR):
-                snr_values = snr_dict[snr_key]
-                _d = snr_values[~np.isnan(snr_values)]
-                if len(_d) != 0:
-                    data.append(_d)
-                    logR4data.append(_logR)
-
-            # Plot violin        rint()
-            parts = ax.violinplot(data, positions=logR4data, showmeans=False, showmedians=True, showextrema=False,quantiles=[[0.1,0.9]]*len(data), widths=0.3)
-
-            # for pc in parts['bodies']:
-            #     pc.set_facecolor(color)
-            #     # pc.set_edgecolor('black')
-            #     pc.set_alpha(0.5)
-
-            if k==0:
-                # Set individual limits per panel
-                all_values = np.concatenate(data)
-                ymin, ymax = np.nanmin(all_values), np.nanmax(all_values)
-                p95 = np.nanpercentile(all_values, 95)
-                ax.set_ylim(0, p95 * 1.1)
-
-                # Axis formatting
-                ax.set_title(title)
-                ax.set_xlabel("Spectral Resolution (R=$\lambda/d\lambda$)")
-                ax.set_xticks(logR)
-                ax.set_xticklabels([str(r) for r in R_list], fontsize=12)
-                ax.grid(True)
-
-                if idx == 0:
-                    ax.set_ylabel("SNR")
-                else:
-                    ax.tick_params(labelleft=True)  # Ensure y-axis tick labels are shown
-
-        plt.tight_layout()
-
-
-def plot_snr_violin_panels_3x3(SNR_dict_list,R_list, label_list,snr_key_group="SNR_O2_corr"):
-    """
-    Plot 3x3
-    snr_keys = ["SNR_O2_corr", "SNR_O2_uncorr_small_scale"]
-    """
-
-    logR = np.log10(R_list)
-
-    fig, axes = plt.subplots(3,3, figsize=(6, 5))  # Adapt width
-
-    # List of colors used in the plots
-    color_list = ["#ff9900","#006699", "#6600ff","purple","grey"]
-    # Ensure snr_key_group is always a list
-    if isinstance(snr_key_group, str):
-        snr_key_group = [snr_key_group]
-    for idx,(ax,snr_key,color,mylabel) in enumerate(zip(axes,snr_key_group,color_list,label_list)):
-        # Collect SNR values for each resolution, removing NaNs
-        data = []
-        logR4data = []
-        for snr_dict,_logR in zip(SNR_dict_list,logR):
-            snr_values = snr_dict[snr_key]
-            _d = snr_values[~np.isnan(snr_values)]
-            if len(_d) != 0:
-                data.append(_d)
-                logR4data.append(_logR)
-
-        # Plot violin        rint()
-        parts = ax.violinplot(data, positions=logR4data, showmeans=False, showmedians=True, showextrema=False,quantiles=[[0.1,0.9]]*len(data), widths=0.3)
-
-        # for pc in parts['bodies']:
-        #     pc.set_facecolor(color)
-        #     # pc.set_edgecolor('black')
-        #     pc.set_alpha(0.5)
-
-        # Set individual limits per panel
-        all_values = np.concatenate(data)
-        ymin, ymax = np.nanmin(all_values), np.nanmax(all_values)
-        p95 = np.nanpercentile(all_values, 95)
-        ax.set_ylim(0, p95 * 1.1)
-
-        # Axis formatting
-        ax.set_title(mylabel)
-        ax.set_xlabel("Spectral Resolution (R=$\lambda/d\lambda$)")
-        ax.set_xticks(logR)
-        ax.set_xticklabels([str(r) for r in R_list], fontsize=12)
-        ax.grid(True)
-
-        if idx %3 == 0:
-            ax.set_ylabel("SNR")
-        else:
-            ax.tick_params(labelleft=True)  # Ensure y-axis tick labels are shown
-
-    plt.tight_layout()
-
-
 
 if __name__ == "__main__":
     plot_results = True
@@ -184,12 +28,12 @@ if __name__ == "__main__":
     # target_list = ["HIP 32439 A","HIP 77052 A","HIP 79672","HIP 26779","HIP 113283"]
     # target_list = ["HIP 79672"]
 
-    # scriptfile = "/fast/jruffio/data/exosims/exosims_samples/20250528_exosims_genOutSpec_MHRS_Romandetecnoise.json"
-    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/output/20250604_MHRS_Romandetecnoise_SNR_outputs_paper_newmodel.txt"
+    scriptfile = "/fast/jruffio/data/exosims/exosims_samples/20250528_exosims_genOutSpec_MHRS_Romandetecnoise.json"
+    output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/output/20250604_MHRS_Romandetecnoise_SNR_outputs_paper.txt"
     # scriptfile = "/fast/jruffio/data/exosims/exosims_samples/20250528_exosims_genOutSpec_MHRS_10xbetterRoman.json"
-    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/output/20250604_MHRS_10xbetterRoman_SNR_outputs_paper_newmodel.txt"
-    scriptfile = "/fast/jruffio/data/exosims/exosims_samples/20250528_exosims_genOutSpec_MHRS_nodetecnoise.json"
-    output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/output/20250604_MHRS_nodetecnoise_SNR_outputs_paper_newmodel.txt"
+    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/output/20250604_MHRS_10xbetterRoman_SNR_outputs_paper.txt"
+    # scriptfile = "/fast/jruffio/data/exosims/exosims_samples/20250528_exosims_genOutSpec_MHRS_nodetecnoise.json"
+    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/output/20250604_MHRS_nodetecnoise_SNR_outputs_paper.txt"
     with open(scriptfile, "r") as ff:
         script = ff.read()
     exosims_pars_dict = json.loads(script)
@@ -234,14 +78,15 @@ if __name__ == "__main__":
                 dMags = np.array([deltaMag(p, Rp, d, phi) for d in d_TL])
                 # print("dMags",dMags,10**(-dMags/2.5))
 
+                # shoudl I use sim.ZodiacalLight.fZ() here?
                 fZ = sim.ZodiacalLight.fZ0
 
                 ## Load the albedo spectral model
                 R_pl_template = 50000
                 filename1_broad = '/fast/jruffio/data/exosims/model_Renyu/HighResSpec/EarthSpec/GeometricA_Earth_HighCloud_UltraRes_500-1500nm_R{0:.0f}.dat'.format(
                     R_pl_template)
-                filename2_broad = '/fast/jruffio/data/exosims/model_Renyu/HighResSpec/EarthSpec/GeometricA_Earth_NoCloud_UltraRes_500-1500nm_R{0:.0f}.dat'.format(
-                    R_pl_template)
+                # filename2_broad = '/fast/jruffio/data/exosims/model_Renyu/HighResSpec/EarthSpec/GeometricA_Earth_NoCloud_UltraRes_500-1500nm_R{0:.0f}.dat'.format(
+                #     R_pl_template)
                 # filename_broad = '/fast/jruffio/data/exosims/model_Renyu/HighResSpec/EarthSpec/GeometricA_Earth_NoCloud_UltraRes_500-1500nm_R{0:.0f}.dat'.format(R_pl_template)
                 # filename_broad = '/fast/jruffio/data/exosims/model_Renyu/HighResSpec/EarthSpec/GeometricA_Earth_HighCloud_UltraRes.dat'
                 data_broad = np.loadtxt(filename1_broad, dtype=float)
@@ -285,8 +130,8 @@ if __name__ == "__main__":
                     # for key, val in zip(SNR_dict.keys(), SNR_dict.values()):
                     #     print("SNR {0}: {1}".format(key, val))
                     SNR_dict_list.append(SNR_dict)
-            plot_snr_violin_panels(SNR_dict_list, R_list)
-    plt.show()
+            plot_snr_violin_panels(SNR_dict_list, R_list,plot_hpf_snr=True)
+            plt.show()
 
 
 

@@ -36,7 +36,7 @@ def print_fits_structure(filename):
         print("End"+"/"*40)
 
 
-fig_dir = "/exosims_samples/figures"
+fig_dir = "/fast/jruffio/data/exosims/exosims_samples/figures"
 
 core_mean_intensity= "/fast/jruffio/data/exosims/exosims_samples/USORT_OVC/core_mean_intensity.fits"
 core_thruput = "/fast/jruffio/data/exosims/exosims_samples/USORT_OVC/core_thruput.fits"
@@ -54,8 +54,8 @@ with fits.open(occ_trans) as hdul:
 
     WA = WA*(1000*u.nm/ (7.87*u.m) *u.rad).to(u.arcsec)
 
-    plt.figure()
-    plt.plot(WA.to_value(u.arcsec),D)
+    plt.figure(figsize=(5,4))
+    plt.plot(WA.to_value(u.arcsec),D,label="Occulter")
 
 with fits.open(core_thruput) as hdul:
     dat = hdul[0].data.T
@@ -65,15 +65,17 @@ with fits.open(core_thruput) as hdul:
 
     WA = WA*(1000*u.nm/ (7.87*u.m) *u.rad).to(u.arcsec)
 
-    plt.figure()
-    plt.plot(WA.to_value(u.arcsec),D)
+    # plt.figure()
+    plt.plot(WA.to_value(u.arcsec),D,label="Core")
     plt.xlabel(r"Separation (arcsec)",fontsize=12)
-    plt.ylabel("Throughput",fontsize=12)
+    plt.ylabel("Transmission",fontsize=12)
     plt.gca().tick_params(axis='y', labelsize=12)
     plt.gca().tick_params(axis='x', labelsize=12)
     # plt.gca().grid(True)
+    plt.legend(loc='center right', fontsize=12, frameon=True)
+    plt.tight_layout()
 
-    out_filename = os.path.join(fig_dir, "core_thruput.png")
+    out_filename = os.path.join(fig_dir, "core_n_occ_thruput.png")
     print("Saving " + out_filename)
     plt.savefig(out_filename, dpi=300)
     plt.savefig(out_filename.replace(".png", ".pdf"))
