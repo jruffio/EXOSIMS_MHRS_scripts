@@ -145,8 +145,14 @@ def plot_snr_violin_panels(SNR_dict_list, R_list,label=None,plot_hpf_snr = False
         #             fontsize=12, verticalalignment='top', horizontalalignment='center')
         ax.set_xlabel("Spectral Resolution (R=$\lambda/d\lambda$)")
         ax.set_xticks(logR)
-        ax.set_xticklabels([str(r) for r in R_list], fontsize=12)
-        ax.grid(True)
+        myxtickslabels = []
+        for r in R_list:
+            if r >= 1000:
+                myxtickslabels.append("{0:.0f}k".format(r/1000.))
+            else:
+                myxtickslabels.append(str(r))
+        ax.set_xticklabels(myxtickslabels, fontsize=12)
+        # ax.grid(True)
 
         if idx == 0:
             if label is not None:

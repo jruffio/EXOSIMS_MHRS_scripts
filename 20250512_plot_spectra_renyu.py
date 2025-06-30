@@ -8,7 +8,7 @@ if __name__ == "__main__":
     lmin,lmax = 600,1000
     lmin_zoom, lmax_zoom = 759,765
 
-    fig_dir = "/exosims_samples/figures"
+    fig_dir = "/fast/jruffio/data/exosims/exosims_samples/figures"
     # File paths and resolutions
     base_dir1 = '/fast/jruffio/data/exosims/model_Renyu/HighResSpec/EarthSpec/'
     base_dir2 = '/fast/jruffio/data/exosims/model_Renyu/HighResSpec/JupiterSpec/'
@@ -67,16 +67,18 @@ if __name__ == "__main__":
             y_min = min([np.nanmin(y) for y in all_y])
             y_max = max([np.nanmax(y) for y in all_y])
             # ax.set_ylim(y_min, y_max)
-            ax.set_ylim(0.0, y_max*1.1)
+            ax.set_ylim(0.0, y_max*1.2)
 
             # Annotation
             ax.text(0.01, 0.01, label, transform=ax.transAxes, fontsize=12, verticalalignment='bottom', horizontalalignment='left')
 
             # Y-label and grid
             ax.set_ylabel('Albedo')
-            ax.grid(True)
+            # ax.grid(True)
 
             ax.fill_between([lmin_zoom,lmax_zoom], [0,0], [1,1], color="pink", alpha=0.75)
+            ax.fill_between([675, lmin_zoom], [0, 0], [1, 1], color="grey", alpha=0.15)
+            ax.fill_between([lmax_zoom,825], [0, 0], [1, 1], color="grey", alpha=0.15)
 
         # X-label only for bottom panel
         axes[-1].set_xlabel('Wavelength [nm]')
@@ -126,7 +128,7 @@ if __name__ == "__main__":
             ax.text(0.01, 0.01, label, transform=ax.transAxes, fontsize=12,
                     verticalalignment='bottom', horizontalalignment='left')
 
-            ax.grid(True)
+            # ax.grid(True)
             ax.fill_between([lmin_zoom, lmax_zoom], [0, 0], [1, 1], color="pink", alpha=0.25)
 
             # Only show x-axis for the middle plot
@@ -145,7 +147,7 @@ if __name__ == "__main__":
             plt.savefig(out_filename, dpi=300)
             plt.savefig(out_filename.replace(".png", ".pdf"))
 
-        if 1: #plot zoomed-in version
+        if 0: #plot zoomed-in version
             # Create figure with no vertical spacing
             n_panels = len(plot_indices)
             fig, axes = plt.subplots(
@@ -176,7 +178,7 @@ if __name__ == "__main__":
 
                 # Y-label and grid
                 # ax.set_ylabel('Albedo')
-                ax.grid(True)
+                # ax.grid(True)
                 ax.fill_between([lmin_zoom,lmax_zoom], [0,0], [1,1], color="pink", alpha=0.25)
 
                 plt.sca(ax)

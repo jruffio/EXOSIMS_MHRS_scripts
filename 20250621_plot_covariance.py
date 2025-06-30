@@ -47,12 +47,14 @@ if __name__ == "__main__":
     # target_list = ["HIP 32439 A","HIP 77052 A","HIP 79672","HIP 26779","HIP 113283"]
     target_list = ["HIP 79672"]
 
-    scriptfile = "/fast/jruffio/data/exosims/exosims_samples/20250528_exosims_genOutSpec_MHRS_Romandetecnoise.json"
-    output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/output/20250604_MHRS_Romandetecnoise_SNR_outputs_paper_newmodel.txt"
-    # scriptfile = "/fast/jruffio/data/exosims/exosims_samples/20250528_exosims_genOutSpec_MHRS_10xbetterRoman.json"
-    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/output/20250604_MHRS_10xbetterRoman_SNR_outputs_paper_newmodel.txt"
-    # scriptfile = "/fast/jruffio/data/exosims/exosims_samples/20250528_exosims_genOutSpec_MHRS_nodetecnoise.json"
-    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/output/20250604_MHRS_nodetecnoise_SNR_outputs_paper_newmodel.txt"
+    scriptfile = "/home/jruffio/code/EXOSIMS_MHRS_scripts/configs/20250621_exosims_genOutSpec_MHRS_Romandetecnoise.json"
+    output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_Romandetecnoise_SNR_outputs_paper.txt"
+    # scriptfile = "/home/jruffio/code/EXOSIMS_MHRS_scripts/configs/20250621_exosims_genOutSpec_MHRS_10xbetterRoman.json"
+    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_10xbetterRoman_SNR_outputs_paper.txt"
+    # scriptfile = "/home/jruffio/code/EXOSIMS_MHRS_scripts/configs/20250621_exosims_genOutSpec_MHRS_nodetecnoise.json"
+    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_nodetecnoise_SNR_outputs_paper.txt"
+    # scriptfile = "/home/jruffio/code/EXOSIMS_MHRS_scripts/configs/20250621_exosims_genOutSpec_MHRS_Romandetecnoise_undersamp.json"
+    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_Romandetecnoise_undersamp_SNR_outputs_paper.txt"
     with open(scriptfile, "r") as ff:
         script = ff.read()
     exosims_pars_dict = json.loads(script)

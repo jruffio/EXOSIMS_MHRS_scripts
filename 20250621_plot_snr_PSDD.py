@@ -1,10 +1,11 @@
 from etc_utils import *
 from EXOSIMS.OpticalSystem.MHRS import read_snr_results_from_file
-
-
 import matplotlib.pyplot as plt
 import numpy as np
 from histogram_violin import histogram_violin
+import astropy.units as u
+import os
+
 def plot_snr_violin_panels_3x3(SNR_dict_table, R_list, row_labels=None, col_labels=None, snr_key_group="SNR_O2_corr"):
     """
     Plot 3x3 grid of violin plots for selected SNR keys.
@@ -12,8 +13,10 @@ def plot_snr_violin_panels_3x3(SNR_dict_table, R_list, row_labels=None, col_labe
 
     logR = np.log10(R_list)
 
+    N_rows = len(SNR_dict_table)//3
+
     fig, axes = plt.subplots(
-        3, 3, figsize=(12, 8),
+        N_rows, 3, figsize=(12, 12),
         sharex=True, sharey=True,
         gridspec_kw={'wspace': 0, 'hspace': 0}
     )
@@ -64,7 +67,7 @@ def plot_snr_violin_panels_3x3(SNR_dict_table, R_list, row_labels=None, col_labe
             # if k == 0 and idx % 3 == 2:
             #     all_values = np.concatenate(data)
             #     p85 = np.nanpercentile(all_values, 75)
-            ax.set_ylim(0, 9)
+            ax.set_ylim(0, 6.5)
 
         if idx <3:
             # print(idx)
@@ -73,10 +76,16 @@ def plot_snr_violin_panels_3x3(SNR_dict_table, R_list, row_labels=None, col_labe
             # ax.text(0.5, 0.99, "\u2193"+col_labels[idx %3]+"\u2193", transform=ax.transAxes,
             #         ha='center', va='top', fontsize=12)
 
-        if idx // 3 == 2:
+        if idx // 3 == N_rows-1:
             ax.set_xlabel("Spectral Resolution (R=$\lambda/\Delta\lambda$)", fontsize=12)
             ax.set_xticks(logR)
-            ax.set_xticklabels([str(r) for r in R_list], fontsize=12)
+            myxtickslabels = []
+            for r in R_list:
+                if r >= 1000:
+                    myxtickslabels.append("{0:.0f}k".format(r/1000.))
+                else:
+                    myxtickslabels.append(str(r))
+            ax.set_xticklabels(myxtickslabels, fontsize=12)
         else:
             ax.tick_params(labelbottom=False)
 
@@ -90,7 +99,7 @@ def plot_snr_violin_panels_3x3(SNR_dict_table, R_list, row_labels=None, col_labe
             ax.tick_params(labelleft=False)
 
         ax.tick_params(axis='y', labelsize=12)
-        ax.grid(True)
+        # ax.grid(True)
 
         # Add legend to top-right panel only
         if idx == 0:
@@ -101,7 +110,7 @@ def plot_snr_violin_panels_3x3(SNR_dict_table, R_list, row_labels=None, col_labe
 if __name__ == "__main__":
     fig_dir = "/fast/jruffio/data/exosims/exosims_samples/figures"
 
-    R_list = [20,50,140,400,1000,3000,10000]
+    R_list = [20,50,140,400,1000,3000,10000,30000]
     # R_list = [100,1000]
 
     override_local_starlight_flux_ratio_list = [1e-10,1e-12]
@@ -109,10 +118,11 @@ if __name__ == "__main__":
     ppFact_Char_list = [0.1,0.01,0.001]
     # ppFact_Char = ppFact_Char_list[1]
     output_filelist0 = []
-    output_filelist0.append("/fast/jruffio/data/exosims/exosims_samples/output/20250604_MHRS_Romandetecnoise_SNR_outputs_paper.txt")
-    output_filelist0.append("/fast/jruffio/data/exosims/exosims_samples/output/20250604_MHRS_10xbetterRoman_SNR_outputs_paper.txt")
-    output_filelist0.append("/fast/jruffio/data/exosims/exosims_samples/output/20250604_MHRS_nodetecnoise_SNR_outputs_paper.txt")
-    detector_labels = ['Roman-analog detector',"10x better detector","No detector noise"]
+    output_filelist0.append("/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_Romandetecnoise_SNR_outputs_paper")
+    output_filelist0.append("/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_Romandetecnoise_undersamp_SNR_outputs_paper")
+    output_filelist0.append("/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_10xbetterRoman_SNR_outputs_paper")
+    output_filelist0.append("/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_nodetecnoise_SNR_outputs_paper")
+    detector_labels = ['Roman-analog detector','Roman-analog\n& undersampled',"10x better detector","No detector noise"]
     SNR_dict_table = []
     for det_label,output_filename0 in zip(detector_labels,output_filelist0):
         col_labels = []
@@ -120,11 +130,14 @@ if __name__ == "__main__":
             SNR_dict_list = []
             for R in R_list:
                 print(output_filename0,override_local_starlight_flux_ratio,R)
-                output_filename = output_filename0.replace(".txt","_R{0}_starlight{1:.1e}_corr{2:.1e}.txt".format(R,override_local_starlight_flux_ratio,override_local_starlight_flux_ratio*ppFact_Char))
-                SNR_dict = read_snr_results_from_file(output_filename)
-                SNR_dict_list.append(SNR_dict)
+                output_filename = output_filename0+ "_R{0}_starlight{1:.1e}_corr{2:.1e}.txt".format(R,override_local_starlight_flux_ratio,override_local_starlight_flux_ratio*ppFact_Char)
+                try:
+                    SNR_dict = read_snr_results_from_file(output_filename)
+                    SNR_dict_list.append(SNR_dict)
+                except:
+                     Warning("missing file "+output_filename)
             SNR_dict_table.append(SNR_dict_list)
-            label = "{0:.0e} starlight ; {1:.0e} corr.".format(override_local_starlight_flux_ratio,override_local_starlight_flux_ratio*ppFact_Char)
+            label = "{0:.0e} starlight ; {1:.0e} correlated".format(override_local_starlight_flux_ratio,override_local_starlight_flux_ratio*ppFact_Char)
             col_labels.append(label)
 
     # plot_snr_violin_panels_3x3(SNR_dict_table, R_list, label_list, snr_key_group="SNR_O2_corr")
@@ -137,13 +150,13 @@ if __name__ == "__main__":
     plt.savefig(out_filename.replace(".png", ".pdf"))
 
 
-    plot_snr_violin_panels_3x3(SNR_dict_table, R_list, detector_labels, col_labels, snr_key_group=["SNR_O2_ignore_corr"])
-
-    det_label4file = os.path.basename(output_filename0).split("_")[2]
-    out_filename = os.path.join(fig_dir, "PSDD_ignore_corr_starlight{0:.1e}.png".format(override_local_starlight_flux_ratio))
-    print("Saving " + out_filename)
-    plt.savefig(out_filename, dpi=300)
-    plt.savefig(out_filename.replace(".png", ".pdf"))
+    # plot_snr_violin_panels_3x3(SNR_dict_table, R_list, detector_labels, col_labels, snr_key_group=["SNR_O2_ignore_corr"])
+    #
+    # det_label4file = os.path.basename(output_filename0).split("_")[2]
+    # out_filename = os.path.join(fig_dir, "PSDD_ignore_corr_starlight{0:.1e}.png".format(override_local_starlight_flux_ratio))
+    # print("Saving " + out_filename)
+    # plt.savefig(out_filename, dpi=300)
+    # plt.savefig(out_filename.replace(".png", ".pdf"))
     plt.show()
 
 

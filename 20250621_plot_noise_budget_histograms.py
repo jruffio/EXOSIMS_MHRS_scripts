@@ -4,6 +4,8 @@ from EXOSIMS.OpticalSystem.MHRS import read_snr_results_from_file,read_snr_resul
 
 import matplotlib.pyplot as plt
 import numpy as np
+import os
+import astropy.units as u
 
 def plot_noise_histograms(noise_dict, tint,bins=50,detec_noise_dict = None):
     """
@@ -57,24 +59,29 @@ def plot_noise_histograms(noise_dict, tint,bins=50,detec_noise_dict = None):
     # Plot the photon counts
     plt.figure(figsize=(6, 5))
 
-    plt.hist(group1[group1 > 0]/tint_h, bins=bin_edges, histtype='step', linewidth=2, label="Background",color=color_list[2])
-    plt.hist(group3[group3 > 0]/tint_h, bins=bin_edges, histtype='step', linewidth=2, label="Starlight",color=color_list[0])
-    plt.hist(group5[group5 > 0]/tint_h, bins=bin_edges, histtype='step', linewidth=2, label="Correlated starlight",color=color_list[3])
+    plt.hist(group3[group3 > 0]/tint_h, bins=bin_edges, histtype='stepfilled', label="Starlight", linewidth=2,color=color_list[0],alpha=0.4)
     plt.hist(group4[group4 > 0]/tint_h, bins=bin_edges, histtype='stepfilled', linewidth=2, label='Planet (ie, "signal")',color=color_list[1],alpha=0.4)
+    plt.hist(group1[group1 > 0]/tint_h, bins=bin_edges, histtype='step', linewidth=2, label="Background",color=color_list[2])
+    # plt.hist(group1[group1 > 0]/tint_h, bins=bin_edges, histtype='stepfilled', linewidth=2,color=color_list[2],alpha=0.8)
+    # plt.hist(group3[group3 > 0]/tint_h, bins=bin_edges, histtype='step', linewidth=2, label="Starlight",color=color_list[0])
+    plt.hist(group5[group5 > 0]/tint_h, bins=bin_edges, histtype='step', linewidth=2, label="Correlated starlight",color=color_list[3])
+    # plt.hist(group5[group5 > 0]/tint_h, bins=bin_edges, histtype='stepfilled', linewidth=2,color=color_list[3],alpha=0.8)
 
     if detec_noise_dict is not None:
         for x_val,key in zip(detec_noise_dict.values(),detec_noise_dict.keys()):
             x_val_rate = x_val/tint_h
             # Annotate with vertical line and text
-            plt.axvline(x=x_val_rate, color='black', linestyle='-', linewidth=1.5)
-            plt.text(x_val_rate * 1.05, 20, key, rotation=90, va='center', color='black')
-        plt.text(x_val_rate * 1.05, 1, "Detector noise", rotation=90, va='bottom', color='black')
+            # plt.axvline(x=x_val_rate, color='black', linestyle='-', linewidth=1.5)
+            plt.plot([x_val_rate, x_val_rate], [24, 30], color='black', linewidth=1.5, linestyle='-')
+            plt.text(x_val_rate * 1.05, 27, key, rotation=90, va='center', color='black')
+        plt.text(x_val_rate * 0.7, 26, "Detector noise", rotation=90, va='center', color='black')
 
     plt.xscale("log")
     plt.xlabel("# of Photons / hour")
     plt.ylabel("# of Stars")
+    plt.ylim([0,30])
     plt.legend(loc='center right', fontsize=10, frameon=True)
-    plt.grid(True, which="both", linestyle="--", alpha=0.5)
+    # plt.grid(True, which="both", linestyle="--", alpha=0.5)
     plt.tight_layout()
 
     # Remove zeros to avoid log(0)
@@ -87,27 +94,30 @@ def plot_noise_histograms(noise_dict, tint,bins=50,detec_noise_dict = None):
     # Plot the standard deviations
     plt.figure(figsize=(6, 5))
 
-    plt.hist(np.sqrt(group1[group1 > 0]), bins=bin_edges_std, histtype='step', linewidth=2, linestyle="--", label="$\sigma$ Background",color=color_list[2])
-    plt.hist(np.sqrt(group3[group3 > 0]), bins=bin_edges_std, histtype='step', linewidth=2, linestyle="--", label="$\sigma$ Starlight",color=color_list[0])
-    # The important thing here is that the correlated speckles is not photon noise, so no sqrt!
-    plt.hist(group5[group5 > 0], bins=bin_edges_std, histtype='step', linewidth=2, linestyle="--", label="$\sigma$ Correlated starlight",color=color_list[3])
-    plt.hist(np.sqrt(group4[group4 > 0]), bins=bin_edges_std, histtype='step', linewidth=2, linestyle="--", label="$\sigma$ Planet",color=color_list[1])
+    # plt.hist(group3[group3 > 0]/tint_h, bins=bin_edges, histtype='stepfilled', label="Starlight", linewidth=2,color=color_list[0],alpha=0.4)
+    # plt.hist(group4[group4 > 0]/tint_h, bins=bin_edges, histtype='stepfilled', linewidth=2, label='Planet (ie, "signal")',color=color_list[1],alpha=0.4)
     plt.hist(group4[group4 > 0], bins=bin_edges_std, histtype='stepfilled', linewidth=2,label='Planet (ie, "signal")',color=color_list[1],alpha=0.4)
+    plt.hist(np.sqrt(group3[group3 > 0]), bins=bin_edges_std, histtype='stepfilled', linewidth=2, label="$\sigma$ Starlight",color=color_list[0],alpha=0.4)
+    plt.hist(np.sqrt(group1[group1 > 0]), bins=bin_edges_std, histtype='step', linewidth=2, linestyle="-", label="$\sigma$ Background",color=color_list[2])
+    # The important thing here is that the correlated speckles is not photon noise, so no sqrt!
+    plt.hist(group5[group5 > 0], bins=bin_edges_std, histtype='step', linewidth=2, linestyle="-", label="$\sigma$ Correlated starlight",color=color_list[3])
+    plt.hist(np.sqrt(group4[group4 > 0]), bins=bin_edges_std, histtype='step', linewidth=2, linestyle="-", label="$\sigma$ Planet",color=color_list[1])
 
 
     if detec_noise_dict is not None:
         for x_val,key in zip(detec_noise_dict.values(),detec_noise_dict.keys()):
             x_val_sqrt = np.sqrt(x_val)
             # Annotate with vertical line and text
-            plt.axvline(x=x_val_sqrt, color='black', linestyle='--', linewidth=1.5)
-            plt.text(x_val_sqrt * 1.05, 40, key, rotation=90, va='center', color='black')
-        plt.text(x_val_sqrt * 1.05, 1, "Detector noise", rotation=90, va='bottom', color='black')
+            plt.plot([x_val_sqrt, x_val_sqrt], [45, 60], color='black', linewidth=1.5, linestyle='-')
+            plt.text(x_val_sqrt * 1.05, 55, key, rotation=90, va='center', color='black')
+        plt.text(x_val_sqrt * 0.7, 51, "Detector noise", rotation=90, va='center', color='black')
 
     plt.xscale("log")
     plt.xlabel(r"# of Photons (T$_{int}$"+" = {0:.0f} h)".format(tint_h))
     plt.ylabel("# of Stars")
+    plt.ylim([0,60])
     plt.legend(loc='upper right', fontsize=10, frameon=True)
-    plt.grid(True, which="both", linestyle="--", alpha=0.5)
+    # plt.grid(True, which="both", linestyle="--", alpha=0.5)
     plt.tight_layout()
     # plt.show()
 
@@ -116,14 +126,15 @@ if __name__ == "__main__":
 
     # R_list = [20,50,140,400,1000,3000,10000]
     R_list = [20,140,1000,10000]
-    override_local_starlight_flux_ratio_list = [1e-10,1e-12]
-    override_local_starlight_flux_ratio = override_local_starlight_flux_ratio_list[0]
-    ppFact_Char_list = [1,0.1,0.01,0.001]
-    ppFact_Char = ppFact_Char_list[1]
+    # override_local_starlight_flux_ratio_list = [1e-10,1e-12]
+    override_local_starlight_flux_ratio = 1e-10
+    # ppFact_Char_list = [1,0.1,0.01,0.001]
+    ppFact_Char = 0.1
 
-    output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/output/20250604_MHRS_Romandetecnoise_SNR_outputs_paper.txt"
-    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/output/20250604_MHRS_10xbetterRoman_SNR_outputs_paper.txt"
-    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/output/20250604_MHRS_nodetecnoise_SNR_outputs_paper.txt"
+    output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_Romandetecnoise_SNR_outputs_paper.txt"
+    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_Romandetecnoise_undersamp_SNR_outputs_paper.txt"
+    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_10xbetterRoman_SNR_outputs_paper.txt"
+    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_nodetecnoise_SNR_outputs_paper.txt"
     det_label = os.path.basename(output_filename0).split("_")[2]
 
     SNR_dict_list = []
@@ -138,7 +149,10 @@ if __name__ == "__main__":
     for R_id,R in enumerate(R_list):
         total_detec_noise = SNR_dict_list[R_id]["C_dark"] + SNR_dict_list[R_id]["C_CIC"] + SNR_dict_list[R_id]["C_readnoise"] + SNR_dict_list[R_id]["C_background_leakage"]
         # print(np.nanmedian(total_detec_noise))
-        mykey = "R={0}".format(R)
+        if R >= 1000:
+            mykey = "R={0:.0f}k".format(R/1000.)
+        else:
+            mykey = "R={0}".format(R)
         detec_noise_dict[mykey] = np.nanmedian(total_detec_noise)
 
     plot_noise_histograms(SNR_dict_list[0],tint,detec_noise_dict=detec_noise_dict)
