@@ -6,7 +6,8 @@ from etc_utils import subtract_continuum_envelop,gaussian_broaden
 if __name__ == "__main__":
 
     lmin,lmax = 600,1000
-    lmin_zoom, lmax_zoom = 759,765
+    lmin_zoom, lmax_zoom = 759,771
+    fontsize=12
 
     fig_dir = "/fast/jruffio/data/exosims/exosims_samples/figures"
     # File paths and resolutions
@@ -46,7 +47,7 @@ if __name__ == "__main__":
         # Create figure with no vertical spacing
         n_panels = len(plot_indices)
         fig, axes = plt.subplots(
-            n_panels, 1, figsize=(8, 1.5 * n_panels),
+            n_panels, 1, figsize=(12, 1.5 * n_panels),
             sharex=True,
             gridspec_kw={'hspace': 0}
         )
@@ -73,7 +74,9 @@ if __name__ == "__main__":
             ax.text(0.01, 0.01, label, transform=ax.transAxes, fontsize=12, verticalalignment='bottom', horizontalalignment='left')
 
             # Y-label and grid
-            ax.set_ylabel('Albedo')
+            ax.set_ylabel('Albedo',fontsize=fontsize)
+            ax.tick_params(axis='x', labelsize=12)
+            ax.tick_params(axis='y', labelsize=12)
             # ax.grid(True)
 
             ax.fill_between([lmin_zoom,lmax_zoom], [0,0], [1,1], color="pink", alpha=0.75)
@@ -81,10 +84,10 @@ if __name__ == "__main__":
             ax.fill_between([lmax_zoom,825], [0, 0], [1, 1], color="grey", alpha=0.15)
 
         # X-label only for bottom panel
-        axes[-1].set_xlabel('Wavelength [nm]')
+        axes[-1].set_xlabel('Wavelength (nm)',fontsize=fontsize)
 
         # Show legend only in the top panel
-        axes[1].legend(loc='lower right', fontsize=10)
+        axes[1].legend(loc='lower right', fontsize=fontsize)
 
 
         plt.xlim(lmin,lmax)
@@ -96,7 +99,7 @@ if __name__ == "__main__":
         plt.savefig(out_filename, dpi=300)
         plt.savefig(out_filename.replace(".png", ".pdf"))
 
-        if 1:  # plot zoomed-in version
+        if 0:  # plot zoomed-in version
             n_panels = len(plot_indices)
             fig, axes = plt.subplots(
                 n_panels, 1, figsize=(4, 1.5 * n_panels),
@@ -132,7 +135,7 @@ if __name__ == "__main__":
             ax.fill_between([lmin_zoom, lmax_zoom], [0, 0], [1, 1], color="pink", alpha=0.25)
 
             # Only show x-axis for the middle plot
-            ax.set_xlabel('Wavelength [nm]')
+            ax.set_xlabel('Wavelength (nm)')
             ax.xaxis.set_ticks_position('bottom')
             ax.tick_params(axis='x', which='both', labelbottom=True)
             plt.sca(ax)
@@ -147,54 +150,46 @@ if __name__ == "__main__":
             plt.savefig(out_filename, dpi=300)
             plt.savefig(out_filename.replace(".png", ".pdf"))
 
-        if 0: #plot zoomed-in version
-            # Create figure with no vertical spacing
-            n_panels = len(plot_indices)
-            fig, axes = plt.subplots(
-                n_panels, 1, figsize=(4, 1.5 * n_panels),
-                sharex=True,
-                gridspec_kw={'hspace': 0}
-            )
+        if 1: #plot zoomed-in version
+            plt.figure(figsize=(12, 3))
+            ax=plt.gca()
 
-            # Plot each molecule panel
-            # for i, (ax, (index, label)) in enumerate(zip(axes, plot_indices)):
-            if 1:
-                i, ax =  1,axes[1]
-                index, label = plot_indices[1]
-                # Plot original
-                y = data_original[:, index]
-                ax.plot(data_original[:, 0], y, color=color_original, label='Original', linewidth=0.5,alpha=0.5)
+            # Plot original
+            index=1
+            y = data_original[:, index]
+            ax.plot(data_original[:, 0], y, color=color_original, label='Original', linewidth=0.5, alpha=0.5)
 
-                # Plot each broadened version
-                for j, (R, data_broad) in enumerate(broad_datasets):
-                    ax.plot(data_broad[:, 0], data_broad[:, index], '--',
-                            color=color_list[j], label=f'R = {R}', linewidth=1.2)
+            # Plot each broadened version
+            for j, (R, data_broad) in enumerate(broad_datasets):
+                ax.plot(data_broad[:, 0], data_broad[:, index], '--',
+                        color=color_list[j], label=f'R = {R}', linewidth=1.2)
 
-                # ax.set_ylim(y_min, y_max)
-                ax.set_ylim(0.0, y_max*1.1)
+            ax.set_ylim(0.0, y_max * 1.1)
 
-                # Annotation
-                ax.text(0.01, 0.01, label, transform=ax.transAxes, fontsize=12, verticalalignment='bottom', horizontalalignment='left')
+            # Annotation
+            ax.text(0.01, 0.01, plot_indices[1][1], transform=ax.transAxes, fontsize=12,
+                    verticalalignment='bottom', horizontalalignment='left')
 
-                # Y-label and grid
-                # ax.set_ylabel('Albedo')
-                # ax.grid(True)
-                ax.fill_between([lmin_zoom,lmax_zoom], [0,0], [1,1], color="pink", alpha=0.25)
+            # ax.grid(True)
+            ax.fill_between([lmin_zoom, lmax_zoom], [0, 0], [1, 1], color="pink", alpha=0.15)
 
-                plt.sca(ax)
-                plt.yticks([])
+            # Only show x-axis for the middle plot
+            ax.set_xlabel('Wavelength (nm)',fontsize=fontsize)
+            ax.xaxis.set_ticks_position('bottom')
+            ax.tick_params(axis='x', which='both', labelbottom=True, labelsize=12)
+            plt.sca(ax)
+            # plt.yticks([])
+            ax.tick_params(axis='y', labelsize=12)
+            ax.set_ylabel('Albedo',fontsize=fontsize)
 
-            # X-label only for bottom panel
-            axes[1].set_xlabel('Wavelength [nm]')
-
-            # # Show legend only in the top panel
-            # axes[i].legend(loc='lower right', fontsize=10)
-
-            plt.xlim(lmin_zoom,lmax_zoom)
+            plt.xlim(lmin_zoom, lmax_zoom)
             plt.tight_layout()
-            plt.subplots_adjust(hspace=0)  # absolutely no space between panels
+            # plt.subplots_adjust(bottom=0.15, top=0.98,hspace=0)
 
-            out_filename = os.path.join(fig_dir, spec_label+"_spectra_zoom.png")
+            # Show legend only in the top panel
+            ax.legend(loc='lower right', fontsize=fontsize)
+
+            out_filename = os.path.join(fig_dir, spec_label + "_spectra_zoom.png")
             print("Saving " + out_filename)
             plt.savefig(out_filename, dpi=300)
             plt.savefig(out_filename.replace(".png", ".pdf"))

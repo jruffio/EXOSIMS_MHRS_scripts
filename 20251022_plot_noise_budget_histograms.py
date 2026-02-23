@@ -124,21 +124,19 @@ def plot_noise_histograms(noise_dict, tint,bins=50,detec_noise_dict = None):
 if __name__ == "__main__":
     fig_dir = "/fast/jruffio/data/exosims/exosims_samples/figures"
 
-    # R_list = [20,50,140,400,1000,3000,10000]
-    R_list = [20,50,140,1000]
+    R_list = [20,140,400,1000,3000,10000]
+    # R_list = [400]
     # override_local_starlight_flux_ratio_list = [1e-10,1e-12]
-    override_local_starlight_flux_ratio = 1e-10
+    override_local_starlight_flux_ratio = 1e-9
     # ppFact_Char_list = [1,0.1,0.01,0.001]
     ppFact_Char = 0.1
 
-    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_test.txt"
-    # det_label = "test"
-
-    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_Romandetecnoise_SNR_outputs_paper.txt"
-    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_Romandetecnoise_undersamp_SNR_outputs_paper.txt"
-    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_10xbetterRoman_SNR_outputs_paper.txt"
-    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_nodetecnoise_SNR_outputs_paper.txt"
-    # det_label = os.path.basename(output_filename0).split("_")[2]
+    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20251022_output/20251022_MHRS_Romandetecnoise_SNR_outputs_paper.txt"
+    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20251022_output/20251022_MHRS_Romandetecnoise_undersamp_SNR_outputs_paper.txt"
+    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20251022_output/20251022_MHRS_10xbetterRoman_SNR_outputs_paper.txt"
+    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20251022_output/20251022_MHRS_nodetecnoise_SNR_outputs_paper.txt"
+    output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20251022_output/20251022_MHRS_emccd_SNR_outputs_paper.txt"
+    det_label = os.path.basename(output_filename0).split("_")[2]
 
 
     SNR_dict_list = []

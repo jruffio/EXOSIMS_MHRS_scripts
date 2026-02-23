@@ -140,7 +140,6 @@ if __name__ == "__main__":
             label = "{0:.0e} starlight ; {1:.0e} correlated".format(override_local_starlight_flux_ratio,override_local_starlight_flux_ratio*ppFact_Char)
             col_labels.append(label)
 
-    # plot_snr_violin_panels_3x3(SNR_dict_table, R_list, label_list, snr_key_group="SNR_O2_corr")
     plot_snr_violin_panels_3x3(SNR_dict_table, R_list, detector_labels, col_labels, snr_key_group=["SNR_O2_corr", "SNR_O2_uncorr_small_scale"])
 
     det_label4file = os.path.basename(output_filename0).split("_")[2]
@@ -149,6 +148,13 @@ if __name__ == "__main__":
     plt.savefig(out_filename, dpi=300)
     plt.savefig(out_filename.replace(".png", ".pdf"))
 
+    plot_snr_violin_panels_3x3(SNR_dict_table, R_list, detector_labels, col_labels, snr_key_group=["SNR_O2_corr"])
+
+    det_label4file = os.path.basename(output_filename0).split("_")[2]
+    out_filename = os.path.join(fig_dir, "PSDD_corr_noHPF_starlight{0:.1e}.png".format(override_local_starlight_flux_ratio))
+    print("Saving " + out_filename)
+    plt.savefig(out_filename, dpi=300)
+    plt.savefig(out_filename.replace(".png", ".pdf"))
 
     # plot_snr_violin_panels_3x3(SNR_dict_table, R_list, detector_labels, col_labels, snr_key_group=["SNR_O2_ignore_corr"])
     #

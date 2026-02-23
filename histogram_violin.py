@@ -134,7 +134,8 @@ def plot_snr_violin_panels(SNR_dict_list, R_list,label=None,plot_hpf_snr = False
                 all_values = np.concatenate(data)
                 ymin, ymax = np.nanmin(all_values), np.nanmax(all_values)
                 p95 = np.nanpercentile(all_values, 85)
-                ax.set_ylim(0, np.max([1,p95 * 1.1]))
+                # ax.set_ylim(0, np.max([1,p95 * 1.1]))
+                ax.set_ylim(0, np.max([1,10]))
 
         # Axis formatting
         ax.set_title(title)
