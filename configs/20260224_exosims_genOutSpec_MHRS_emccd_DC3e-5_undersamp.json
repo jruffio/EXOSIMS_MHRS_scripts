@@ -1,0 +1,356 @@
+{
+    "F0V": 100049145.6598009,
+    "FAP": 3e-07,
+    "FAdMag0": 15,
+    "FoV": 10,
+    "IWA": 0.1,
+    "Irange": [
+        0.0,
+        0.0
+    ],
+    "MDP": 0.001,
+    "Min": null,
+    "Mprange": [
+        1.0,
+        4131.0
+    ],
+    "OBduration": Infinity,
+    "OWA": Infinity,
+    "Orange": [
+        0.0,
+        360.0
+    ],
+    "PCeff": 0.8,
+    "QE": 0.9,
+    "Rprange": [
+        1.0,
+        30.0
+    ],
+    "SRP": true,
+    "Version": {
+        "EXOSIMS Version": "3.4.1",
+        "Editable Installation": false,
+        "Package Versions": {
+            "MeanStars>=3.4.0": "3.5.1",
+            "astropy>=6.0.0": "7.0.1",
+            "astroquery>=0.4.8": "0.4.10",
+            "exo-det-box": "0.0.2",
+            "h5py>=3.7.0": "3.13.0",
+            "ipyparallel>=8.0.0": "9.0.1",
+            "jplephem>=2.20.0": "2.22",
+            "keplertools>=1.2.1": "1.2.1",
+            "numpy>=1.20.0": "2.2.4",
+            "ortools>=9.0": "9.12.4544",
+            "pandas>=1.3": "2.2.3",
+            "scipy>=1.7.2": "1.15.2",
+            "synphot>=1.3.0": "1.5.0",
+            "tqdm>=4.59": "4.67.1"
+        },
+        "Python Version": "3.11.11"
+    },
+    "VmagFill": 0.1,
+    "allocated_time_d": 36.525,
+    "allowRefueling": false,
+    "arange": [
+        0.1,
+        100.0
+    ],
+    "bandpass_model": "box",
+    "bandpass_step": 0.1,
+    "binaryleakfilepath": null,
+    "cachedir": "/home/jruffio/.EXOSIMS/cache",
+    "charMargin": 0.15,
+    "checkInputs": true,
+    "checkKeepoutEnd": true,
+    "coMass": 5800.0,
+    "commonSystemPlane": false,
+    "commonSystemPlaneParams": [
+        0,
+        2.25,
+        0,
+        2.25
+    ],
+    "constTOF": [
+        14.0
+    ],
+    "constrainOrbits": false,
+    "contrast_floor": null,
+    "core_contrast": 1e-10,
+    "core_platescale": null,
+    "core_platescale_units": null,
+    "core_thruput": 0.1,
+    "csv_angsep_colname": "r_as",
+    "defaultAddExoplanetObsTime": true,
+    "default_vals_extra": {
+        "CIC": 0.001,
+        "ENF": 1,
+        "PCeff": 0.8,
+        "radDos": 0
+    },
+    "defburnPortion": 0.05,
+    "dryMass": 3400.0,
+    "dt_max": 1.0,
+    "earths_only": false,
+    "emission_coefficient_back": 0.2,
+    "emission_coefficient_front": 0.8,
+    "erange": [
+        0.01,
+        0.99
+    ],
+    "eta": 0.1,
+    "explainFiltering": false,
+    "external_fuel_mass": 0.0,
+    "fillMissingBandMags": false,
+    "fillPhotometry": false,
+    "filterBinaries": false,
+    "filter_for_char": false,
+    "find_known_RV": false,
+    "fixedPlanPerStar": null,
+    "forceNew": false,
+    "forceStaticEphem": false,
+    "getKnownPlanets": false,
+    "idark": 0.0001,
+    "include_known_RV": null,
+    "input_angle_units": "arcsec",
+    "intCutoff": 50.0,
+    "int_WA": 0.4447814278549973,
+    "int_dMag": 25.0,
+    "keepStarCatalog": true,
+    "koAngles_Earth": [
+        0,
+        180
+    ],
+    "koAngles_Moon": [
+        0,
+        180
+    ],
+    "koAngles_Small": [
+        0,
+        180
+    ],
+    "koAngles_SolarPanel": [
+        0.0,
+        180.0
+    ],
+    "koAngles_Sun": [
+        0,
+        180
+    ],
+    "ko_dtStep": 1.0,
+    "logfile": null,
+    "loglevel": "INFO",
+    "lucky_planets": false,
+    "magEZ": 22.0,
+    "magZ": 23.0,
+    "massLuminosityRelationship": "Henry1993",
+    "maxdVpct": 0.02,
+    "minComp": 0.0,
+    "missionLife": 0.1,
+    "missionLife_d": 36.525,
+    "missionPortion": 1.0,
+    "missionSchedule": null,
+    "missionStart": 60634.0,
+    "modules": {
+        "BackgroundSources": "BackgroundSources",
+        "Completeness": "Completeness",
+        "Observatory": "Observatory",
+        "OpticalSystem": "MHRS",
+        "PlanetPhysicalModel": "PlanetPhysicalModel",
+        "PlanetPopulation": "PlanetPopulation",
+        "PostProcessing": "PostProcessing",
+        "SimulatedUniverse": "SimulatedUniverse",
+        "StarCatalog": "HWOMissionStars",
+        "SurveyEnsemble": "SurveyEnsemble",
+        "SurveySimulation": "SurveySimulation",
+        "TargetList": "TargetList",
+        "TimeKeeping": "TimeKeeping",
+        "ZodiacalLight": "ZodiacalLight"
+    },
+    "nStars": 1,
+    "nVisitsMax": 5,
+    "nofZ": false,
+    "nokoMap": false,
+    "non_lambertian_coefficient_back": 0.004,
+    "non_lambertian_coefficient_front": 0.038,
+    "nopar": false,
+    "nreflection_coefficient": 0.999,
+    "ntFlux": 1,
+    "obscurFac": 0.1211489507256436,
+    "observingModes": [
+        {
+            "instName": "CONF_NF_imager",
+            "lam": 750.0,
+            "BW": 0.2,
+            "intTime": 400,
+            "IWA": 0.003474854905117167,
+            "OWA": 0.8860880008048775,
+            "SNR": 5.0,
+            "bandpass_model": "box",
+            "bandpass_step": 0.1,
+            "detectionMode": true,
+            "radDos": 0.0,
+            "systName": "coronagraph",
+            "timeMultiplier": 1.1
+        },
+        {
+            "instName": "CONF_NF_spectro",
+            "use_ADI": true,
+            "lam": 750.0,
+            "BW": 0.2,
+            "intTime": 400,
+            "IWA": 0.003474854905117167,
+            "OWA": 0.8860880008048775,
+            "SNR": 5.0,
+            "bandpass_model": "box",
+            "bandpass_step": 0.1,
+            "detectionMode": false,
+            "radDos": 0.0,
+            "systName": "coronagraph",
+            "timeMultiplier": 1.1
+        }
+    ],
+    "occ_dtmax": 61.0,
+    "occ_dtmin": 0.055,
+    "occ_trans": 0.2,
+    "occulterSep": 55000.0,
+    "ohTime": 1,
+    "optics": 0.5,
+    "optional_filters": {
+        "binary_filter": {
+            "enabled": false
+        },
+        "completeness_filter": {
+            "enabled": true
+        },
+        "outside_IWA_filter": {
+            "enabled": true
+        }
+    },
+    "pixelNumber": 1000,
+    "pixelScale": 0.02,
+    "pixelSize": 1e-05,
+    "popStars": null,
+    "ppFact": 0.29,
+    "ppFact_char": 0.1,
+    "prange": [
+        0.1,
+        0.6
+    ],
+    "pupilDiam": 7.87,
+    "radDos": 0,
+    "record_counts_path": null,
+    "ref_Time": 0.0,
+    "ref_dMag": 0,
+    "scMass": 6000.0,
+    "scaleOrbits": false,
+    "scaleWAdMag": false,
+    "scienceInstruments": [
+        {
+            "name": "CONF_NF_imager",
+            "CIC": 2.1e-3,
+            "idark": 3e-5,
+            "sread": 0,
+            "ENF": 1.0,
+            "pixelScale": 0.015,
+            "lenslSamp": 1.0,
+            "FoV": 3.5,
+            "PCeff": 1.0,
+            "QE": 0.675,
+            "fnumber": 11.357232025464837,
+            "focal": 89.38141604040827,
+            "optics": 0.532,
+            "pixelNumber": 1024.0,
+            "pixelSize": 1.3e-05,
+            "radDos": 0,
+            "texp": 8.180824
+        },
+        {
+            "name": "CONF_NF_spectro",
+            "Rs": 200.0,
+            "CIC": 2.1e-3,
+            "idark": 3e-5,
+            "sread": 0,
+            "ENF": 1.0,
+            "pixelScale": 0.015,
+            "lenslSamp": 1.0,
+            "FoV": 3.5,
+            "PCeff": 1.0,
+            "QE": 0.675,
+            "fnumber": 11.357232025464837,
+            "focal": 89.38141604040827,
+            "optics": 0.532,
+            "pixelNumber": 1024.0,
+            "pixelSize": 1.3e-05,
+            "radDos": 0,
+            "texp": 300
+        }
+    ],
+    "seed": 408612100,
+    "settlingTime": 1.0,
+    "shapeFac": 0.7853981633974483,
+    "skEff": 0.7098,
+    "skIsp": 220.0,
+    "skMass": 0.0,
+    "sk_Tmax": 365.0,
+    "sk_Tmin": 0.0,
+    "skipSaturationCalcs": true,
+    "slewEff": 1.0,
+    "slewIsp": 4160.0,
+    "slewMass": 0.0,
+    "specular_reflection_factor": 0.975,
+    "spkpath": "/home/jruffio/.EXOSIMS/downloads/de432s.bsp",
+    "sread": 0,
+    "stabilityFact": 1.0,
+    "starlightSuppressionSystems": [
+        {
+            "lam": 750.0,
+            "BW": 0.2,
+            "chromaticity_dwave_nm": 10,
+            "IWA": 0.1767766952966369,
+            "OWA": 45.078057300642406,
+            "contrast_floor": 1e-10,
+            "core_area": 2.26,
+            "core_mean_intensity": "/fast/jruffio/data/exosims/exosims_samples/USORT_OVC/core_mean_intensity.fits",
+            "core_platescale": 0.0049141869340953714,
+            "core_platescale_units": null,
+            "core_thruput": "/fast/jruffio/data/exosims/exosims_samples/USORT_OVC/core_thruput.fits",
+            "csv_angsep_colname": "r_as",
+            "input_angle_units": "LAMBDA/D",
+            "koAngles_Earth": [
+                0.0,
+                180.0
+            ],
+            "koAngles_Moon": [
+                0.0,
+                180.0
+            ],
+            "koAngles_Small": [
+                0.0,
+                180.0
+            ],
+            "koAngles_Sun": [
+                0.0,
+                180.0
+            ],
+            "name": "coronagraph",
+            "occ_trans": "/fast/jruffio/data/exosims/exosims_samples/USORT_OVC/occ_trans.fits",
+            "occulter": false,
+            "ohTime": 0.0,
+            "optics": 1.0
+        }
+    ],
+    "staticStars": true,
+    "texp": 100,
+    "texp_flag": false,
+    "thrust": 450.0,
+    "timeMultiplier": 1.0,
+    "twotanks": false,
+    "use_core_thruput_for_ez": false,
+    "varEZ": 0.0,
+    "verbose": true,
+    "whichPlanetPhaseFunction": "lambert",
+    "wrange": [
+        0.0,
+        360.0
+    ]
+}
