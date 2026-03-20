@@ -15,11 +15,13 @@ if __name__ == "__main__":
     plot_results = False
 
     R_list = [20,50,140,400,1000,3000,10000,30000]
-    # R_list = [20,50,140,400,1000]
+    # R_list = [20,50,140,400,1000,3000]
     # R_list = [400]
-    contrast_floor_list = [1e-10]
-    ppFact_Char_list = [0.1,0.01,0.001]
-    # ppFact_Char_list = [0.001]
+    contrast_floor_list = [5e-10]
+    # ppFact_Char_list = [0.1,0.01,0.001]
+    # ppFact_Char_list = [0.1]
+    # ppFact_Char_list = [0.01]
+    ppFact_Char_list = [0.001]
 
     n_EZ = 3  # nEZ is the number of "zodis" where 1 zodi is equivalent to the amount of dust in the solar system. So it's like a way to tune the amount of dust in a planetary system
     # pl_dist_ee_coefs =  [0.95,1.0,1.35,1.67]
@@ -33,22 +35,42 @@ if __name__ == "__main__":
 
     scriptfile_list = []
     output_filename0_list = []
-    scriptfile = "/home/jruffio/code/EXOSIMS_MHRS_scripts/configs/20251022_exosims_genOutSpec_MHRS_emccd.json"
-    output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20251022_output/20251022_MHRS_emccd_SNR_outputs_paper.txt"
+
+    # scriptfile = "/home/jruffio/code/EXOSIMS_MHRS_scripts/configs/20260224_exosims_genOutSpec_MHRS_emccd_DC1e-3.json"
+    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC1e-3_SNR_outputs_paper.txt"
+    # print(scriptfile)
+    # scriptfile_list.append(scriptfile)
+    # output_filename0_list.append(output_filename0)
+
+    # scriptfile = "/home/jruffio/code/EXOSIMS_MHRS_scripts/configs/20260224_exosims_genOutSpec_MHRS_emccd_DC1e-4.json"
+    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC1e-4_SNR_outputs_paper.txt"
+    # print(scriptfile)
+    # scriptfile_list.append(scriptfile)
+    # output_filename0_list.append(output_filename0)
+
+    # scriptfile = "/home/jruffio/code/EXOSIMS_MHRS_scripts/configs/20260224_exosims_genOutSpec_MHRS_emccd_DC3e-5.json"
+    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC3e-5_SNR_outputs_paper.txt"
+    # print(scriptfile)
+    # scriptfile_list.append(scriptfile)
+    # output_filename0_list.append(output_filename0)
+
+    scriptfile = "/home/jruffio/code/EXOSIMS_MHRS_scripts/configs/20260224_exosims_genOutSpec_MHRS_emccd_DC3e-5_undersamp.json"
+    output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC3e-5_undersamp_SNR_outputs_paper.txt"
+    print(scriptfile)
     scriptfile_list.append(scriptfile)
     output_filename0_list.append(output_filename0)
-    scriptfile = "/home/jruffio/code/EXOSIMS_MHRS_scripts/configs/20251022_exosims_genOutSpec_MHRS_10xbetterEmccd.json"
-    output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20251022_output/20251022_MHRS_10xbetterEmccd_SNR_outputs_paper.txt"
-    scriptfile_list.append(scriptfile)
-    output_filename0_list.append(output_filename0)
-    scriptfile = "/home/jruffio/code/EXOSIMS_MHRS_scripts/configs/20251022_exosims_genOutSpec_MHRS_nodetecnoise.json"
-    output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20251022_output/20251022_MHRS_nodetecnoise_SNR_outputs_paper.txt"
-    scriptfile_list.append(scriptfile)
-    output_filename0_list.append(output_filename0)
-    scriptfile = "/home/jruffio/code/EXOSIMS_MHRS_scripts/configs/20251022_exosims_genOutSpec_MHRS_emccd_undersamp.json"
-    output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20251022_output/20251022_MHRS_emccd_undersamp_SNR_outputs_paper.txt"
-    scriptfile_list.append(scriptfile)
-    output_filename0_list.append(output_filename0)
+
+    # scriptfile = "/home/jruffio/code/EXOSIMS_MHRS_scripts/configs/20260224_exosims_genOutSpec_MHRS_emccd_DC0.json"
+    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC0_SNR_outputs_paper.txt"
+    # print(scriptfile)
+    # scriptfile_list.append(scriptfile)
+    # output_filename0_list.append(output_filename0)
+
+    # scriptfile = "/home/jruffio/code/EXOSIMS_MHRS_scripts/configs/20260224_exosims_genOutSpec_MHRS_emccd_DC1e-4_undersamp.json"
+    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC1e-4_undersamp_SNR_outputs_paper.txt"
+    # print(scriptfile)
+    # scriptfile_list.append(scriptfile)
+    # output_filename0_list.append(output_filename0)
 
     for scriptfile, output_filename0 in zip(scriptfile_list, output_filename0_list):
         with open(scriptfile, "r") as ff:
@@ -98,7 +120,7 @@ if __name__ == "__main__":
                     beta = np.pi/2 *u.rad
                     phi = sim.SimulatedUniverse.PlanetPhysicalModel.calc_Phi(beta)
                     dMags = np.array([deltaMag(p, Rp, d, phi) for d in d_TL])
-                    print("dMags",dMags,10**(-dMags/2.5))
+                    # print("dMags",dMags,10**(-dMags/2.5))
                     # exit()
                     # shoudl I use sim.ZodiacalLight.fZ() here?
                     fZ = sim.ZodiacalLight.fZ0
@@ -115,20 +137,25 @@ if __name__ == "__main__":
                     for clouds in ["highcloud", "lowcloud", "clearsky"]:
                         fname = "/fast/jruffio/data/exosims/model_Ty/earth_maxres/earth_icrccm_hitran2020_" + clouds + "_50_100000cm-1_toa_R150000.rad"
                         nc_data = np.loadtxt(fname, comments='#')
+                        # print("nc_data[:, 0].shape",clouds, nc_data[:, 0].shape)
                         nc_where_wvs = np.where((nc_data[:, 0] > lmin) * (nc_data[:, 0] < lmax))
                         nc_data = nc_data[nc_where_wvs[0], :]
                         nc_wavelength_nm = nc_data[:, 0] * u.nm  # column 1
+                        # print(nc_data[:, 1].shape)
                         nc_reflectance_all.append(nc_data[:, 1])   # Reflectance spectrum
 
                         fname = "/fast/jruffio/data/exosims/model_Ty/earth_maxres/earth_icrccm_hitran2020_" + clouds + "_o2_50_100000cm-1_toa_R150000.rad"
                         nc_data = np.loadtxt(fname, comments='#')
+                        # print("nc_data[:, 0].shape",clouds, nc_data[:, 0].shape)
                         nc_data = nc_data[nc_where_wvs[0], :]
                         nc_reflectance_o2.append(nc_data[:, 1])
 
                         fname = "/fast/jruffio/data/exosims/model_Ty/earth_maxres/earth_icrccm_hitran2020_" + clouds + "_h2o_50_100000cm-1_toa_R150000.rad"
                         nc_data = np.loadtxt(fname, comments='#')
+                        # print("nc_data[:, 0].shape",clouds, nc_data[:, 0].shape)
                         nc_data = nc_data[nc_where_wvs[0], :]
                         nc_reflectance_h2o.append(nc_data[:, 1])   # Reflectance spectrum
+                    # exit()
                     nc_reflectance_all = np.array(nc_reflectance_all)
                     nc_reflectance_all = np.nansum(nc_reflectance_all*np.array([0.25,0.25,0.5])[:,None],axis=0)
                     nc_reflectance_o2 = np.array(nc_reflectance_o2)
@@ -144,11 +171,11 @@ if __name__ == "__main__":
                     nc_reflectance_h2o = nc_reflectance_h2o-envelop2
 
                     # plt.figure()
-                    # plt.plot(nc_wavelength_nm,nc_reflectance_all,label="all")
+                    # # plt.plot(nc_wavelength_nm,nc_reflectance_all,label="all")
                     # plt.plot(nc_wavelength_nm,nc_reflectance_h2o,label="H2O")
                     # plt.plot(nc_wavelength_nm,nc_reflectance_o2,label="O2")
-                    # plt.plot(nc_wavelength_nm,envelop,label="envelop")
-                    # plt.plot(nc_wavelength_nm,envelop2,label="envelop2")
+                    # # plt.plot(nc_wavelength_nm,envelop,label="envelop")
+                    # # plt.plot(nc_wavelength_nm,envelop2,label="envelop2")
                     # plt.legend()
                     # plt.show()
 

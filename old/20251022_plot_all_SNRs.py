@@ -32,7 +32,7 @@ import warnings
 
 
 if __name__ == "__main__":
-    fig_dir = "/fast/jruffio/data/exosims/exosims_samples/figures"
+    fig_dir = "/exosims_samples/figures"
 
     R_list = [20,140,400,1000,3000,10000,30000]
     # R_list = [100,1000]

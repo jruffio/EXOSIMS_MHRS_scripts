@@ -1,46 +1,11 @@
-import numpy as np
+
+
+from EXOSIMS.OpticalSystem.MHRS import write_snr_results_to_file, read_snr_results_from_file
 import matplotlib.pyplot as plt
-
-def histogram_violin(ax, data, position, width=0.3, bins=20, color='C0', alpha=0.6):
-    """
-    Plot a histogram-based violin plot at a specific x-axis position.
-
-    Parameters
-    ----------
-    ax : matplotlib.axes.Axes
-        The axis to plot on.
-    data : array-like
-        1D array of data values.
-    position : float
-        The x-position at which to draw the violin.
-    width : float
-        Maximum half-width of the violin.
-    bins : int
-        Number of histogram bins.
-    color : str
-        Fill color for the violin.
-    alpha : float
-        Transparency level.
-    """
-    data = np.asarray(data)
-    hist, bin_edges = np.histogram(data, bins=bins, density=True)
-    bin_centers = 0.5 * (bin_edges[:-1] + bin_edges[1:])
-
-    # Normalize histogram to max width
-    hist_widths = hist / hist.max() * width
-
-    # Plot left side
-    ax.fill_betweenx(bin_centers, position - hist_widths, position,
-                     facecolor=color, alpha=alpha, edgecolor=None)
-
-    # Plot right side
-    ax.fill_betweenx(bin_centers, position, position + hist_widths,
-                     facecolor=color, alpha=alpha, edgecolor=None)
-
-    # # Optionally add median line
-    # median = np.median(data)
-    # ax.plot([position - width, position + width], [median, median],
-    #         color='k', linestyle='-', linewidth=1)
+import numpy as np
+import os
+from histogram_violin import histogram_violin
+import warnings
 
 
 def plot_snr_violin_panels(SNR_dict_list, R_list,label=None,plot_hpf_snr = False, Ty=False):
@@ -104,6 +69,8 @@ def plot_snr_violin_panels(SNR_dict_list, R_list,label=None,plot_hpf_snr = False
     #     titles = [title+label for title in titles]
 
     logR = np.log10(R_list)
+    R_list_xaxis = [R for R in R_list if R != 400]
+    logR_xaxis = np.log10(R_list_xaxis)
 
     fig, axes = plt.subplots(1, len(snr_keys), figsize=(4 * len(snr_keys), 4.5))  # Adapt width
     if len(snr_keys) == 1:
@@ -149,7 +116,7 @@ def plot_snr_violin_panels(SNR_dict_list, R_list,label=None,plot_hpf_snr = False
             # print(idx,k,mylabel)
             # print('25th and 75th percentile' if idx == 3 and k == 0 else None)
             ax.plot(logR4data, p2, color=color, lw=2, linestyle='-', marker='o', label=mylabel)
-            ax.plot(logR4data, p1, color=color, lw=1, linestyle='--', label='25th and 75th percentile' if idx == 3 and k == 0 else None)
+            ax.plot(logR4data, p1, color=color, lw=1, linestyle='--', label='25th & 75th percentile' if idx == 3 and k == 0 else None)
             ax.plot(logR4data, p3, color=color, lw=1, linestyle='--', label= None)
 
             if k==0:
@@ -168,9 +135,9 @@ def plot_snr_violin_panels(SNR_dict_list, R_list,label=None,plot_hpf_snr = False
         #     ax.text(0.5, 0.85, label, transform=ax.transAxes, color = "grey",
         #             fontsize=12, verticalalignment='top', horizontalalignment='center')
         ax.set_xlabel("Spectral Resolution (R=$\lambda/d\lambda$)",fontsize=fontsize)
-        ax.set_xticks(logR)
+        ax.set_xticks(logR_xaxis)
         myxtickslabels = []
-        for r in R_list:
+        for r in R_list_xaxis:
             if r >= 1000:
                 myxtickslabels.append("{0:.0f}k".format(r/1000.))
             else:
@@ -180,9 +147,9 @@ def plot_snr_violin_panels(SNR_dict_list, R_list,label=None,plot_hpf_snr = False
 
         if idx == 0:
             if label is not None:
-                ax.set_ylabel(label+"\nS/N",fontsize=fontsize)
+                ax.set_ylabel(label+"\nS/N",fontsize=20)
             else:
-                ax.set_ylabel("S/N",fontsize=fontsize)
+                ax.set_ylabel("S/N",fontsize=20)
         elif idx == 3:
             ax.legend(loc='upper left', fontsize=fontsize, frameon=True)
         else:
@@ -191,3 +158,54 @@ def plot_snr_violin_panels(SNR_dict_list, R_list,label=None,plot_hpf_snr = False
         ax.tick_params(axis='x', labelsize=fontsize)
         ax.tick_params(axis='y', labelsize=fontsize)
         plt.tight_layout()
+
+if __name__ == "__main__":
+    fig_dir = "/fast/jruffio/data/exosims/exosims_samples/figures"
+
+    # R_list = [20,140,400,1000,3000,10000,30000]
+    R_list = [20,50,140,400,1000,3000]
+    # R_list = [100,1000]
+    # contrast_floor_list = [1e-10,1e-12]
+    contrast_floor = 1e-9
+    # ppFact_Char_list = [0.1,0.01,0.001]
+    ppFact_Char = 0.1
+    output_filelist0 = []
+    scriptfile_list = []
+    output_filelist0 = []
+    # _output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC1e-3_SNR_outputs_paper"
+    # output_filelist0.append(_output_filename0)
+    # _output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC1e-4_SNR_outputs_paper"
+    # output_filelist0.append(_output_filename0)
+    # _output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC3e-5_SNR_outputs_paper"
+    # output_filelist0.append(_output_filename0)
+    _output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC3e-5_undersamp_SNR_outputs_paper"
+    output_filelist0.append(_output_filename0)
+    # _output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC0_SNR_outputs_paper"
+    # output_filelist0.append(_output_filename0)
+    detector_labels = [r'$10^{-4}$ e-/s',r'$3x10^{-5}$ e-/s',r'$3x10^{-5}$ e-/s (undersamp.)',r"zero noise"] #,'Roman-analog & undersampled',"10x better detector","No detector noise"
+    for det_label,output_filename0 in zip(detector_labels,output_filelist0):
+        split_filename = os.path.basename(output_filename0).split("_")
+        det_label4file = "_".join(split_filename[2:(len(split_filename)-3)])
+
+        SNR_dict_list = []
+        for R in R_list:
+            output_filename = output_filename0+ "_R{0}_starlight{1:.1e}_corr{2:.1e}.txt".format(R,contrast_floor,contrast_floor*ppFact_Char)
+            if 1:
+                print("Reading "+output_filename)
+                SNR_dict = read_snr_results_from_file(output_filename)
+                print(SNR_dict)
+                SNR_dict_list.append(SNR_dict)
+                print("Done reading "+output_filename)
+                # label = det_label+" ; {0:.0e} ; {1:.0e}".format(contrast_floor,contrast_floor*ppFact_Char)
+            # except:
+            #      Warning("missing file "+output_filename)
+            label = det_label
+
+        plot_snr_violin_panels(SNR_dict_list, R_list,label=label,plot_hpf_snr=False,Ty=True)
+
+        out_filename = os.path.join(fig_dir, "SNRs_vs_R_{0}_starlight{1:.1e}_corr{2:.1e}.png".format(det_label4file,contrast_floor,contrast_floor*ppFact_Char))
+        print("Saving " + out_filename)
+        plt.savefig(out_filename, dpi=300)
+        plt.savefig(out_filename.replace(".png", ".pdf"))
+    plt.show()
+

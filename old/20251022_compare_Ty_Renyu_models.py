@@ -95,7 +95,7 @@ if 0: # high clouds
     # index 7: O3
     # pl_template_name = ["all","H2O","CO2","N2O","CH4","O2","O3"]
     ## Load the albedo spectral model
-    filename_broad = '/fast/jruffio/data/exosims/model_Renyu/HighResSpec/EarthSpec/GeometricA_Earth_HighCloud_UltraRes.dat'
+    filename_broad = '/model_Renyu/HighResSpec/EarthSpec/GeometricA_Earth_HighCloud_UltraRes.dat'
     hc_data_broad = np.loadtxt(filename_broad, dtype=float)
     hc_where_wvs = np.where((hc_data_broad[:,0]>200)*(hc_data_broad[:,0]<1500))
     hc_data_broad = hc_data_broad[hc_where_wvs[0],:]
@@ -111,7 +111,7 @@ if 0: # high clouds
     # plt.plot(hc_waves,hc_O2_template,label="Renyu high clouds O2")
 
 if 0:  # low clouds
-    filename_broad = '/fast/jruffio/data/exosims/model_Renyu/HighResSpec/EarthSpec/GeometricA_Earth_LowCloud_UltraRes1.dat'
+    filename_broad = '/model_Renyu/HighResSpec/EarthSpec/GeometricA_Earth_LowCloud_UltraRes1.dat'
     lc_data_broad = np.loadtxt(filename_broad, dtype=float)
     lc_where_wvs = np.where((lc_data_broad[:, 0] > 200) * (lc_data_broad[:, 0] < 1500))
     lc_data_broad = lc_data_broad[lc_where_wvs[0], :]
@@ -127,7 +127,7 @@ if 0:  # low clouds
     # plt.plot(lc_waves, lc_O2_template, label="Renyu low clouds O2")
 
 if 0:  # No clouds
-    filename_broad = '/fast/jruffio/data/exosims/model_Renyu/HighResSpec/EarthSpec/GeometricA_Earth_NoCloud_UltraRes.dat'
+    filename_broad = '/model_Renyu/HighResSpec/EarthSpec/GeometricA_Earth_NoCloud_UltraRes.dat'
     nc_data_broad = np.loadtxt(filename_broad, dtype=float)
     nc_where_wvs = np.where((nc_data_broad[:, 0] > 200) * (nc_data_broad[:, 0] < 1500))
     nc_data_broad = nc_data_broad[nc_where_wvs[0], :]
@@ -223,7 +223,8 @@ if 0: # low clouds
 
 if 1: #no clouds
     # Path to your file
-    for clouds in ["highcloud","lowcloud","clearsky"]:
+    # for clouds in ["highcloud","lowcloud","clearsky"]:
+    for clouds in ["highcloud"]:
         #/fast/jruffio/data/exosims/model_Ty/earth_maxres/earth_icrccm_hitran2020_lowcloud_50_100000cm-1_toa.rad
         #/fast/jruffio/data/exosims/model_Ty/earth_maxres/earth_icrccm_hitran2020_clearsky_50_100000cm-1_toa.rad
         #
@@ -249,7 +250,7 @@ if 1: #no clouds
         np.savetxt(fname.replace(".rad","_R{0}.rad".format(R)), np.column_stack((wv0.to(u.nm).value, nc_reflectance_R_all)), fmt="%.9e",)
 
         plt.plot(wv0, nc_reflectance_R_all, label="Ty no cloud (R={0})".format(R),linestyle="--",alpha=1,linewidth=2)
-        # plt.show()
+        plt.show()
 
         fname = "/fast/jruffio/data/exosims/model_Ty/earth_maxres/earth_icrccm_hitran2020_"+clouds+"_h2o_50_100000cm-1_toa.rad"
         nc_data = np.loadtxt(fname, comments='#')
@@ -301,7 +302,7 @@ if 0: #mixed model
 
 if 1:
     # Read the CSV file
-    filename = "/fast/jruffio/data/exosims/model_Ty/earth_quadrature_R140.csv"  # replace with your file path
+    filename = "/model_Ty/earth_quadrature_R140.csv"  # replace with your file path
     data = np.genfromtxt(filename, delimiter=",", names=True)
     print(data.dtype.names)
     # Access columns by name

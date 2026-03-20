@@ -5,18 +5,36 @@ import numpy as np
 from histogram_violin import histogram_violin
 import astropy.units as u
 import os
+import math
+
+def to_latex_sci(num, decimals=2):
+    """Convert a number to a LaTeX scientific notation string for Matplotlib."""
+    if num == 0:
+        return r"$0$"
+
+    # Extract mantissa and exponent from Python's own formatting to avoid float errors
+    s = f"{num:.{decimals}e}"
+    mantissa, exp = s.split("e")
+    exp = int(exp)
+    mantissa = float(mantissa)
+
+    if mantissa == 1.0:
+        return rf"$10^{{{exp}}}$"
+    else:
+        return rf"${mantissa:.{decimals}g} \times 10^{{{exp}}}$"
+
 
 def plot_snr_violin_panels_3x3(SNR_dict_table, R_list, row_labels=None, col_labels=None, snr_key_group="SNR_O2_corr"):
     """
     Plot 3x3 grid of violin plots for selected SNR keys.
     """
-
+    fontsize = 12
     logR = np.log10(R_list)
 
     N_rows = len(SNR_dict_table)//3
 
     fig, axes = plt.subplots(
-        N_rows, 3, figsize=(12, 12),
+        N_rows, 3, figsize=(12, 8),
         sharex=True, sharey=True,
         gridspec_kw={'wspace': 0, 'hspace': 0}
     )
@@ -61,13 +79,20 @@ def plot_snr_violin_panels_3x3(SNR_dict_table, R_list, row_labels=None, col_labe
             elif idx == 0 and k == 1:
                 _label = 'High-pass filtered'
             ax.plot(logR4data, p2, color=color, lw=2, linestyle='-', marker='o', label=_label)
+            _argmax = np.argmax(p2)
+            plt.sca(ax)
+            if k==0:
+                plt.text(logR4data[_argmax], p2[_argmax]+0.5, f"{p2[_argmax]:.1f}", color=color, ha='center', va='bottom', fontsize=fontsize)
+            else:
+                plt.text(logR4data[_argmax], p2[_argmax]-0.5, f"{p2[_argmax]:.1f}", color=color, ha='center', va='top', fontsize=fontsize)
             ax.plot(logR4data, p1, color=color, lw=1, linestyle='--', label='25th and 75th percentile' if idx == 0 and k == 0 else None)
             ax.plot(logR4data, p3, color=color, lw=1, linestyle='--', label= None)
 
             # if k == 0 and idx % 3 == 2:
             #     all_values = np.concatenate(data)
             #     p85 = np.nanpercentile(all_values, 75)
-            ax.set_ylim(0, 6.5)
+            ax.set_ylim(0, 17)
+            ax.set_yticks([0,5,10,15])
 
         if idx <3:
             # print(idx)
@@ -77,7 +102,7 @@ def plot_snr_violin_panels_3x3(SNR_dict_table, R_list, row_labels=None, col_labe
             #         ha='center', va='top', fontsize=12)
 
         if idx // 3 == N_rows-1:
-            ax.set_xlabel("Spectral Resolution (R=$\lambda/\Delta\lambda$)", fontsize=12)
+            ax.set_xlabel("Spectral Resolution (R=$\lambda/\Delta\lambda$)", fontsize=fontsize)
             ax.set_xticks(logR)
             myxtickslabels = []
             for r in R_list:
@@ -85,25 +110,25 @@ def plot_snr_violin_panels_3x3(SNR_dict_table, R_list, row_labels=None, col_labe
                     myxtickslabels.append("{0:.0f}k".format(r/1000.))
                 else:
                     myxtickslabels.append(str(r))
-            ax.set_xticklabels(myxtickslabels, fontsize=12)
+            ax.set_xticklabels(myxtickslabels, fontsize=fontsize)
         else:
             ax.tick_params(labelbottom=False)
 
         if idx % 3 == 0:
             if row_labels is not None:
-                ax.set_ylabel(row_labels[idx//3]+"\nS/N", fontsize=12)
+                ax.set_ylabel(row_labels[idx//3]+"\nS/N", fontsize=fontsize)
             else:
-                ax.set_ylabel("S/N", fontsize=12)
-            ax.tick_params(labelleft=True, labelsize=12)
+                ax.set_ylabel("S/N", fontsize=fontsize)
+            ax.tick_params(labelleft=True, labelsize=fontsize)
         else:
             ax.tick_params(labelleft=False)
 
-        ax.tick_params(axis='y', labelsize=12)
+        ax.tick_params(axis='y', labelsize=fontsize)
         # ax.grid(True)
 
         # Add legend to top-right panel only
         if idx == 0:
-            ax.legend(loc='upper left', fontsize=10, frameon=True)
+            ax.legend(loc='upper left', fontsize=fontsize, frameon=True)
 
     fig.subplots_adjust(left=0.10, right=0.98, bottom=0.08, top=0.92)
 
@@ -118,11 +143,16 @@ if __name__ == "__main__":
     ppFact_Char_list = [0.1,0.01,0.001]
     # ppFact_Char = ppFact_Char_list[1]
     output_filelist0 = []
-    output_filelist0.append("/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_Romandetecnoise_SNR_outputs_paper")
-    output_filelist0.append("/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_Romandetecnoise_undersamp_SNR_outputs_paper")
-    output_filelist0.append("/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_10xbetterRoman_SNR_outputs_paper")
-    output_filelist0.append("/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_nodetecnoise_SNR_outputs_paper")
-    detector_labels = ['Roman-analog detector','Roman-analog\n& undersampled',"10x better detector","No detector noise"]
+    # _output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC1e-4_SNR_outputs_paper"
+    # output_filelist0.append(_output_filename0)
+    _output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC3e-5_SNR_outputs_paper"
+    output_filelist0.append(_output_filename0)
+    _output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC3e-5_undersamp_SNR_outputs_paper"
+    output_filelist0.append(_output_filename0)
+    _output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC0_SNR_outputs_paper"
+    output_filelist0.append(_output_filename0)
+    # detector_labels = [r'$10^{-4}$ e-/s', r'$3x10^{-5}$ e-/s', '(undersampled)\n'+r'$3x10^{-5}$ e-/s', r"zero noise"]
+    detector_labels = [r'$3x10^{-5}$ e-/s', '(undersampled)\n'+r'$3x10^{-5}$ e-/s', r"zero noise"]
     SNR_dict_table = []
     for det_label,output_filename0 in zip(detector_labels,output_filelist0):
         col_labels = []
@@ -137,21 +167,23 @@ if __name__ == "__main__":
                 except:
                      Warning("missing file "+output_filename)
             SNR_dict_table.append(SNR_dict_list)
-            label = "{0:.0e} starlight ; {1:.0e} correlated".format(override_local_starlight_flux_ratio,override_local_starlight_flux_ratio*ppFact_Char)
+            mant, exp = f"{override_local_starlight_flux_ratio:.0e}".split("e")
+            s = f"{mant}×10^{{{int(exp)}}}"
+            label = to_latex_sci(override_local_starlight_flux_ratio)+" starlight ; "+to_latex_sci(override_local_starlight_flux_ratio*ppFact_Char)+" correlated"
             col_labels.append(label)
 
-    plot_snr_violin_panels_3x3(SNR_dict_table, R_list, detector_labels, col_labels, snr_key_group=["SNR_O2_corr", "SNR_O2_uncorr_small_scale"])
+    plot_snr_violin_panels_3x3(SNR_dict_table, R_list, detector_labels, col_labels, snr_key_group=["SNR_H2O_corr", "SNR_H2O_uncorr_small_scale"])
 
     det_label4file = os.path.basename(output_filename0).split("_")[2]
-    out_filename = os.path.join(fig_dir, "PSDD_corr_starlight{0:.1e}.png".format(override_local_starlight_flux_ratio))
+    out_filename = os.path.join(fig_dir, "PSDD_O2_corr_starlight{0:.1e}_slides.png".format(override_local_starlight_flux_ratio))
     print("Saving " + out_filename)
     plt.savefig(out_filename, dpi=300)
     plt.savefig(out_filename.replace(".png", ".pdf"))
 
-    plot_snr_violin_panels_3x3(SNR_dict_table, R_list, detector_labels, col_labels, snr_key_group=["SNR_O2_corr"])
+    plot_snr_violin_panels_3x3(SNR_dict_table, R_list, detector_labels, col_labels, snr_key_group=["SNR_H2O_corr"])
 
     det_label4file = os.path.basename(output_filename0).split("_")[2]
-    out_filename = os.path.join(fig_dir, "PSDD_corr_noHPF_starlight{0:.1e}.png".format(override_local_starlight_flux_ratio))
+    out_filename = os.path.join(fig_dir, "PSDD_O2_corr_noHPF_starlight{0:.1e}_slides.png".format(override_local_starlight_flux_ratio))
     print("Saving " + out_filename)
     plt.savefig(out_filename, dpi=300)
     plt.savefig(out_filename.replace(".png", ".pdf"))

@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import astropy.units as u
+import matplotlib.patheffects as PathEffects
 
 def plot_noise_histograms(noise_dict, tint,bins=50,detec_noise_dict = None):
     """
@@ -24,6 +25,7 @@ def plot_noise_histograms(noise_dict, tint,bins=50,detec_noise_dict = None):
         Number of log-spaced bins for the x-axis (photon counts).
     """
     color_list = ["#ff9900", "#006699", "#6600ff", "pink", "grey"]
+    fontsize = 14
 
     tint_h = tint.to_value(u.h)
 
@@ -57,7 +59,8 @@ def plot_noise_histograms(noise_dict, tint,bins=50,detec_noise_dict = None):
     bin_edges = np.logspace(np.log10(min_val), np.log10(max_val), bins)
 
     # Plot the photon counts
-    plt.figure(figsize=(6, 5))
+    plt.figure(figsize=(12, 5))
+    plt.subplot(1,2,1)
 
     plt.hist(group3[group3 > 0]/tint_h, bins=bin_edges, histtype='stepfilled', label="Starlight", linewidth=2,color=color_list[0],alpha=0.4)
     plt.hist(group4[group4 > 0]/tint_h, bins=bin_edges, histtype='stepfilled', linewidth=2, label='Planet (ie, "signal")',color=color_list[1],alpha=0.4)
@@ -72,16 +75,29 @@ def plot_noise_histograms(noise_dict, tint,bins=50,detec_noise_dict = None):
             x_val_rate = x_val/tint_h
             # Annotate with vertical line and text
             # plt.axvline(x=x_val_rate, color='black', linestyle='-', linewidth=1.5)
-            plt.plot([x_val_rate, x_val_rate], [24, 30], color='black', linewidth=1.5, linestyle='-')
-            plt.text(x_val_rate * 1.05, 27, key, rotation=90, va='center', color='black')
-        plt.text(x_val_rate * 0.7, 26, "Detector noise", rotation=90, va='center', color='black')
+            plt.plot([x_val_rate, x_val_rate], [24, 35], color='black', linewidth=1.5, linestyle='-')
+            txt = plt.text(x_val_rate * 1.05, 29, key, rotation=90, va='center', color='black', fontsize=fontsize)
+            txt.set_path_effects([PathEffects.withStroke(linewidth=1, foreground='w')])
+        txt = plt.text((detec_noise_dict["R=20"]/tint_h) * 0.6, 28, "Detector noise", rotation=90, va='center', color='black', fontsize=fontsize)
+        txt.set_path_effects([PathEffects.withStroke(linewidth=1, foreground='w')])
 
     plt.xscale("log")
-    plt.xlabel("# of Photons / hour")
-    plt.ylabel("# of Stars")
-    plt.ylim([0,30])
-    plt.legend(loc='center right', fontsize=10, frameon=True)
+    plt.xlabel("# of Photons / hour", fontsize=fontsize)
+    plt.ylabel("# of Stars", fontsize=fontsize)
+    ax = plt.gca()
+    ax.tick_params(axis='x', labelsize=fontsize)
+    ax.tick_params(axis='y', labelsize=fontsize)
+    plt.ylim([0,35])
+    plt.xlim([0.5,1e6])
+    plt.legend(loc='center right', fontsize=fontsize, frameon=True)
     # plt.grid(True, which="both", linestyle="--", alpha=0.5)
+    ax.text(
+        -0.02, 1.02, "a",
+        transform=ax.transAxes,
+        fontsize=18,
+        va="bottom",
+        ha="right"
+    )
     plt.tight_layout()
 
     # Remove zeros to avoid log(0)
@@ -92,7 +108,8 @@ def plot_noise_histograms(noise_dict, tint,bins=50,detec_noise_dict = None):
     bin_edges_std = np.logspace(np.log10(min_val), np.log10(max_val), bins)
 
     # Plot the standard deviations
-    plt.figure(figsize=(6, 5))
+    # plt.figure(figsize=(6, 5))
+    plt.subplot(1,2,2)
 
     # plt.hist(group3[group3 > 0]/tint_h, bins=bin_edges, histtype='stepfilled', label="Starlight", linewidth=2,color=color_list[0],alpha=0.4)
     # plt.hist(group4[group4 > 0]/tint_h, bins=bin_edges, histtype='stepfilled', linewidth=2, label='Planet (ie, "signal")',color=color_list[1],alpha=0.4)
@@ -108,42 +125,53 @@ def plot_noise_histograms(noise_dict, tint,bins=50,detec_noise_dict = None):
         for x_val,key in zip(detec_noise_dict.values(),detec_noise_dict.keys()):
             x_val_sqrt = np.sqrt(x_val)
             # Annotate with vertical line and text
-            plt.plot([x_val_sqrt, x_val_sqrt], [45, 60], color='black', linewidth=1.5, linestyle='-')
-            plt.text(x_val_sqrt * 1.05, 55, key, rotation=90, va='center', color='black')
-        plt.text(x_val_sqrt * 0.7, 51, "Detector noise", rotation=90, va='center', color='black')
+            plt.plot([x_val_sqrt, x_val_sqrt], [45, 65], color='black', linewidth=1.5, linestyle='-')
+            txt = plt.text(x_val_sqrt * 1.05, 56, key, rotation=90, va='center', color='black', fontsize=fontsize)
+            txt.set_path_effects([PathEffects.withStroke(linewidth=1, foreground='w')])
+        txt = plt.text(np.sqrt(detec_noise_dict["R=20"]) * 0.63, 52, "Detector noise", rotation=90, va='center', color='black', fontsize=fontsize)
+        txt.set_path_effects([PathEffects.withStroke(linewidth=1, foreground='w')])
 
     plt.xscale("log")
-    plt.xlabel(r"# of Photons (T$_{int}$"+" = {0:.0f} h)".format(tint_h))
-    plt.ylabel("# of Stars")
-    plt.ylim([0,60])
-    plt.legend(loc='upper right', fontsize=10, frameon=True)
+    plt.xlabel(r"# of Photons (T$_{int}$"+" = {0:.0f} h)".format(tint_h), fontsize=fontsize)
+    plt.ylabel("# of Stars", fontsize=fontsize)
+    ax = plt.gca()
+    ax.tick_params(axis='x', labelsize=fontsize)
+    ax.tick_params(axis='y', labelsize=fontsize)
+    plt.ylim([0,65])
+    plt.xlim([50,3e6])
+    plt.legend(loc='upper right', fontsize=fontsize, frameon=True)
     # plt.grid(True, which="both", linestyle="--", alpha=0.5)
+    ax.text(
+        -0.02, 1.02, "b",
+        transform=ax.transAxes,
+        fontsize=18,
+        va="bottom",
+        ha="right"
+    )
     plt.tight_layout()
     # plt.show()
 
 if __name__ == "__main__":
     fig_dir = "/fast/jruffio/data/exosims/exosims_samples/figures"
 
+    R_list = [20,140,400,1000,3000,10000,30000]
     # R_list = [20,50,140,400,1000,3000,10000]
-    R_list = [20,50,140,1000]
-    # override_local_starlight_flux_ratio_list = [1e-10,1e-12]
-    override_local_starlight_flux_ratio = 1e-10
-    # ppFact_Char_list = [1,0.1,0.01,0.001]
-    ppFact_Char = 0.1
+    # R_list = [100,1000]
+    # contrast_floor_list = [1e-10,1e-12]
+    contrast_floor = 1e-10
+    # ppFact_Char_list = [0.1,0.01,0.001]
+    ppFact_Char = 0.01
 
-    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_test.txt"
-    # det_label = "test"
-
-    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_Romandetecnoise_SNR_outputs_paper.txt"
-    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_Romandetecnoise_undersamp_SNR_outputs_paper.txt"
-    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_10xbetterRoman_SNR_outputs_paper.txt"
-    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20250621_output/20250621_MHRS_nodetecnoise_SNR_outputs_paper.txt"
-    # det_label = os.path.basename(output_filename0).split("_")[2]
+    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC1e-4_SNR_outputs_paper"
+    output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC3e-5_SNR_outputs_paper"
+    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC3e-5_undersamp_SNR_outputs_paper"
+    # output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC0_SNR_outputs_paper"
+    det_label = os.path.basename(output_filename0).split("_")[2]
 
 
     SNR_dict_list = []
     for R in R_list:
-        output_filename = output_filename0.replace(".txt","_R{0}_starlight{1:.1e}_corr{2:.1e}.txt".format(R,override_local_starlight_flux_ratio,override_local_starlight_flux_ratio*ppFact_Char))
+        output_filename = output_filename0+"_R{0}_starlight{1:.1e}_corr{2:.1e}.txt".format(R,contrast_floor,contrast_floor*ppFact_Char)
         print(output_filename)
         SNR_dict, config_dict = read_snr_results_and_json_from_file(output_filename)
         tint = config_dict["observingModes"][1]["intTime"] *u.h
@@ -162,15 +190,11 @@ if __name__ == "__main__":
     plot_noise_histograms(SNR_dict_list[0],tint,detec_noise_dict=detec_noise_dict)
 
     plt.figure(1)
-    out_filename = os.path.join(fig_dir, "noise_budget_signal_histograms_{0}_starlight{1:.1e}_corr{2:.1e}.png".format(det_label,override_local_starlight_flux_ratio,override_local_starlight_flux_ratio*ppFact_Char))
+    out_filename = os.path.join(fig_dir, "noise_budget_signal_histograms_{0}_starlight{1:.1e}_corr{2:.1e}.png".format(det_label,contrast_floor,contrast_floor*ppFact_Char))
     print("Saving " + out_filename)
     plt.savefig(out_filename, dpi=300)
     plt.savefig(out_filename.replace(".png", ".pdf"))
-    plt.figure(2)
-    out_filename = os.path.join(fig_dir, "noise_budget_stddev_histograms{0}_starlight{1:.1e}_corr{2:.1e}.png".format(det_label,override_local_starlight_flux_ratio,override_local_starlight_flux_ratio*ppFact_Char))
-    print("Saving " + out_filename)
-    plt.savefig(out_filename, dpi=300)
-    plt.savefig(out_filename.replace(".png", ".pdf"))
+
     plt.show()
 
 

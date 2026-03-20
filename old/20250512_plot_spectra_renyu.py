@@ -9,7 +9,7 @@ if __name__ == "__main__":
     lmin_zoom, lmax_zoom = 759,771
     fontsize=12
 
-    fig_dir = "/fast/jruffio/data/exosims/exosims_samples/figures"
+    fig_dir = "/exosims_samples/figures"
     # File paths and resolutions
     base_dir1 = '/fast/jruffio/data/exosims/model_Renyu/HighResSpec/EarthSpec/'
     base_dir2 = '/fast/jruffio/data/exosims/model_Renyu/HighResSpec/JupiterSpec/'

@@ -102,7 +102,7 @@ if __name__ == "__main__":
                 # filename2_broad = '/fast/jruffio/data/exosims/model_Renyu/HighResSpec/EarthSpec/GeometricA_Earth_NoCloud_UltraRes_500-1500nm_R{0:.0f}.dat'.format(
                 #     R_pl_template)
                 # filename_broad = '/fast/jruffio/data/exosims/model_Renyu/HighResSpec/EarthSpec/GeometricA_Earth_NoCloud_UltraRes_500-1500nm_R{0:.0f}.dat'.format(R_pl_template)
-                filename_broad = '/fast/jruffio/data/exosims/model_Renyu/HighResSpec/EarthSpec/GeometricA_Earth_HighCloud_UltraRes.dat'
+                filename_broad = '/model_Renyu/HighResSpec/EarthSpec/GeometricA_Earth_HighCloud_UltraRes.dat'
                 # data_broad = np.loadtxt(filename1_broad, dtype=float)
                 # data_broad2 = np.loadtxt(filename2_broad, dtype=float)
                 data_broad = np.loadtxt(filename_broad, dtype=float)

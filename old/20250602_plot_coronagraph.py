@@ -36,7 +36,7 @@ def print_fits_structure(filename):
         print("End"+"/"*40)
 
 
-fig_dir = "/fast/jruffio/data/exosims/exosims_samples/figures"
+fig_dir = "/exosims_samples/figures"
 
 core_mean_intensity= "/fast/jruffio/data/exosims/exosims_samples/USORT_OVC/core_mean_intensity.fits"
 core_thruput = "/fast/jruffio/data/exosims/exosims_samples/USORT_OVC/core_thruput.fits"

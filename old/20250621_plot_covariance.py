@@ -28,7 +28,7 @@ import json
 import ternary
 
 if __name__ == "__main__":
-    fig_dir = "/fast/jruffio/data/exosims/exosims_samples/figures"
+    fig_dir = "/exosims_samples/figures"
 
     # R_list = [20,50,140,400,1000,3000,10000]
     R_list = [1000]
