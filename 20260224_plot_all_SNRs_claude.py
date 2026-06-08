@@ -175,7 +175,7 @@ if __name__ == "__main__":
     output_filelist0.append(_output_filename0)
     _output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC0_SNR_outputs_paper"
     output_filelist0.append(_output_filename0)
-    detector_labels = [r'$10^{-4}$ e-/s', r'$3x10^{-5}$ e-/s', '(undersampled)\n'+r'$3x10^{-5}$ e-/s', r"zero noise"]
+    detector_labels = [r'$10^{-4}$ phot/s', r'$3x10^{-5}$ phot/s', '(undersampled)\n'+r'$3x10^{-5}$ phot/s', r"zero noise"]
 
     n_rows = len(output_filelist0)
     n_cols = 4  # number of SNR panels

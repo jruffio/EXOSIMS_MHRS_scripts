@@ -143,8 +143,8 @@ if __name__ == "__main__":
     ppFact_Char_list = [0.1,0.01,0.001]
     # ppFact_Char = ppFact_Char_list[1]
     output_filelist0 = []
-    # _output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC1e-4_SNR_outputs_paper"
-    # output_filelist0.append(_output_filename0)
+    _output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC1e-4_SNR_outputs_paper"
+    output_filelist0.append(_output_filename0)
     _output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC3e-5_SNR_outputs_paper"
     output_filelist0.append(_output_filename0)
     _output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC3e-5_undersamp_SNR_outputs_paper"
@@ -152,7 +152,8 @@ if __name__ == "__main__":
     _output_filename0 = "/fast/jruffio/data/exosims/exosims_samples/20260224_output/20260224_MHRS_emccd_DC0_SNR_outputs_paper"
     output_filelist0.append(_output_filename0)
     # detector_labels = [r'$10^{-4}$ e-/s', r'$3x10^{-5}$ e-/s', '(undersampled)\n'+r'$3x10^{-5}$ e-/s', r"zero noise"]
-    detector_labels = [r'$3x10^{-5}$ e-/s', '(undersampled)\n'+r'$3x10^{-5}$ e-/s', r"zero noise"]
+    # detector_labels = [r'$3x10^{-5}$ e-/s', '(undersampled)\n'+r'$3x10^{-5}$ e-/s', r"zero noise"]
+    detector_labels = [r'$10^{-4}$ phot/s', r'$3x10^{-5}$ phot/s', '(undersampled)\n'+r'$3x10^{-5}$ phot/s', r"zero noise"]
     SNR_dict_table = []
     for det_label,output_filename0 in zip(detector_labels,output_filelist0):
         col_labels = []

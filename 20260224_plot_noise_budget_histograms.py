@@ -75,10 +75,10 @@ def plot_noise_histograms(noise_dict, tint,bins=50,detec_noise_dict = None):
             x_val_rate = x_val/tint_h
             # Annotate with vertical line and text
             # plt.axvline(x=x_val_rate, color='black', linestyle='-', linewidth=1.5)
-            plt.plot([x_val_rate, x_val_rate], [24, 35], color='black', linewidth=1.5, linestyle='-')
-            txt = plt.text(x_val_rate * 1.05, 29, key, rotation=90, va='center', color='black', fontsize=fontsize)
+            plt.plot([x_val_rate, x_val_rate], [35, 45], color='black', linewidth=1.5, linestyle='-')
+            txt = plt.text(x_val_rate * 1.05, 39, key, rotation=90, va='center', color='black', fontsize=fontsize)
             txt.set_path_effects([PathEffects.withStroke(linewidth=1, foreground='w')])
-        txt = plt.text((detec_noise_dict["R=20"]/tint_h) * 0.6, 28, "Detector noise", rotation=90, va='center', color='black', fontsize=fontsize)
+        txt = plt.text((detec_noise_dict["R=20"]/tint_h) * 0.6, 35, "Detector noise", rotation=90, va='center', color='black', fontsize=fontsize)
         txt.set_path_effects([PathEffects.withStroke(linewidth=1, foreground='w')])
 
     plt.xscale("log")
@@ -87,7 +87,7 @@ def plot_noise_histograms(noise_dict, tint,bins=50,detec_noise_dict = None):
     ax = plt.gca()
     ax.tick_params(axis='x', labelsize=fontsize)
     ax.tick_params(axis='y', labelsize=fontsize)
-    plt.ylim([0,35])
+    plt.ylim([0,45])
     plt.xlim([0.5,1e6])
     plt.legend(loc='center right', fontsize=fontsize, frameon=True)
     # plt.grid(True, which="both", linestyle="--", alpha=0.5)
@@ -125,10 +125,10 @@ def plot_noise_histograms(noise_dict, tint,bins=50,detec_noise_dict = None):
         for x_val,key in zip(detec_noise_dict.values(),detec_noise_dict.keys()):
             x_val_sqrt = np.sqrt(x_val)
             # Annotate with vertical line and text
-            plt.plot([x_val_sqrt, x_val_sqrt], [45, 65], color='black', linewidth=1.5, linestyle='-')
-            txt = plt.text(x_val_sqrt * 1.05, 56, key, rotation=90, va='center', color='black', fontsize=fontsize)
+            plt.plot([x_val_sqrt, x_val_sqrt], [65, 85], color='black', linewidth=1.5, linestyle='-')
+            txt = plt.text(x_val_sqrt * 1.05, 76, key, rotation=90, va='center', color='black', fontsize=fontsize)
             txt.set_path_effects([PathEffects.withStroke(linewidth=1, foreground='w')])
-        txt = plt.text(np.sqrt(detec_noise_dict["R=20"]) * 0.63, 52, "Detector noise", rotation=90, va='center', color='black', fontsize=fontsize)
+        txt = plt.text(np.sqrt(detec_noise_dict["R=20"]) * 0.63, 68, "Detector noise", rotation=90, va='center', color='black', fontsize=fontsize)
         txt.set_path_effects([PathEffects.withStroke(linewidth=1, foreground='w')])
 
     plt.xscale("log")
@@ -137,7 +137,7 @@ def plot_noise_histograms(noise_dict, tint,bins=50,detec_noise_dict = None):
     ax = plt.gca()
     ax.tick_params(axis='x', labelsize=fontsize)
     ax.tick_params(axis='y', labelsize=fontsize)
-    plt.ylim([0,65])
+    plt.ylim([0,85])
     plt.xlim([50,3e6])
     plt.legend(loc='upper right', fontsize=fontsize, frameon=True)
     # plt.grid(True, which="both", linestyle="--", alpha=0.5)

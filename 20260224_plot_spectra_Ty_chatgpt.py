@@ -88,7 +88,7 @@ if __name__ == "__main__":
     # -----------------------------
     # Main panels
     # -----------------------------
-    for ax,pl_template,name in zip(axes,pl_template_list,pl_template_name_list):
+    for ax_id,(ax,pl_template,name) in enumerate(zip(axes,pl_template_list,pl_template_name_list)):
         print(name)
 
         broad_datasets = []
@@ -121,9 +121,12 @@ if __name__ == "__main__":
         )
         txt.set_path_effects([PathEffects.withStroke(linewidth=1, foreground='w')])
 
-        ax.fill_between([lmin_zoom,lmax_zoom],[0,0],[1,1],color="pink",alpha=0.75)
-        ax.fill_between([675, lmin_zoom], [0, 0], [1, 1], color="grey", alpha=0.15)
-        ax.fill_between([lmax_zoom,825], [0, 0], [1, 1], color="grey", alpha=0.15)
+        if ax_id ==1:
+            ax.fill_between([675, lmin_zoom], [0, 0], [1, 1], color="grey", alpha=0.15)
+            ax.fill_between([lmin_zoom,lmax_zoom],[0,0],[1,1],color="pink",alpha=0.75)
+            ax.fill_between([lmax_zoom,825], [0, 0], [1, 1], color="grey", alpha=0.15)
+        else:
+            ax.fill_between([675, 825], [0, 0], [1, 1], color="grey", alpha=0.15)
 
         ax.set_xlim(lmin,lmax)
 
